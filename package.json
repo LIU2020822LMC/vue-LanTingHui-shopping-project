@@ -30,6 +30,8 @@
     "eslint-plugin-vue": "~10.3.0",
     "jiti": "^2.4.2",
     "npm-run-all2": "^8.0.4",
+    "sacc": "^0.0.1",
+    "sass-embedded": "^1.90.0",
     "typescript": "~5.8.0",
     "unplugin-auto-import": "^20.0.0",
     "unplugin-vue-components": "^28.8.0",
