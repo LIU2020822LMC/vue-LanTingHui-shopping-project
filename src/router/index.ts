@@ -1,23 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
 
 const router = createRouter({
+  //createWebHistory 表示使用 "HTML5 History 模式"，这种模式下 URL 看起来很干净，比如 http://你的网站/home（没有多余的#符号）
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: "/",
+      component: () => import("@/views/Layout/index.vue"),
+      children: [
+        {
+          path: "home",
+          component: () => import("@/views/Home/index.vue"),
+        },
+        {
+          path: "category",
+          component: () => import("@/views/Category/index.vue"),
+        },
+      ],
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: "/login",
+      component: () => import("@/views/Login/index.vue"),
     },
   ],
-})
+});
 
 export default router
