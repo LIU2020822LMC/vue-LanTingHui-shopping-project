@@ -78,14 +78,14 @@ import { RouterLink } from 'vue-router';
         display: inline-block;
 
         &:hover {
-          color: $xtxColor;
-          border-bottom: 1px solid $xtxColor;
+          color: $LTHColor;
+          border-bottom: 1px solid $LTHColor;
         }
       }
 
       .active {
-        color: $xtxColor;
-        border-bottom: 1px solid $xtxColor;
+        color: $LTHColor;
+        border-bottom: 1px solid $LTHColor;
       }
     }
   }

@@ -5,12 +5,12 @@
       <div class="container">
         <dl>
           <dt>客户服务</dt>
-          <dd><i class="iconfont icon-kefu"></i> 在线客服</dd>
-          <dd><i class="iconfont icon-question"></i> 问题反馈</dd>
+          <dd><i class="iconfont icon-zaixiankefu"></i> 在线客服</dd>
+          <dd><i class="iconfont icon-wentifankui"></i> 问题反馈</dd>
         </dl>
         <dl>
           <dt>关注我们</dt>
-          <dd><i class="iconfont icon-weixin"></i> 公众号</dd>
+          <dd><i class="iconfont icon-gongzhonghao"></i> 公众号</dd>
           <dd><i class="iconfont icon-weibo"></i> 微博</dd>
         </dl>
         <dl>
@@ -115,11 +115,27 @@
         font-size: 36px;
         display: block;
         color: #666;
+        
+        &.icon-zaixiankefu {
+          color: #409eff;
+        }
+        
+        &.icon-wentifankui {
+          color: #3f72af;
+        }
+        
+        &.icon-gongzhonghao {
+          color: #07c160;
+        }
+        
+        &.icon-weibo {
+          color: #e6162d;
+        }
       }
 
       &:hover {
         .iconfont {
-          color: $xtxColor;
+          color: $LTHColor;
         }
       }
 

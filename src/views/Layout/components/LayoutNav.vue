@@ -56,7 +56,7 @@ const isLogin = ref(true);
         }
 
         &:hover {
-          color: $xtxColor;
+          color: $LTHColor;
         }
       }
 
