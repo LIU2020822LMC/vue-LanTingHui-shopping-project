@@ -5,7 +5,10 @@
         <RouterLink to="/">澜庭汇</RouterLink>
       </h1>
       <ul class="app-header-nav">
-        <li class="home" v-for="item in categoryList" :key="item.id">
+        <li class="home" >
+          <RouterLink to="/">首页</RouterLink>
+        </li>
+        <li class="home" v-for="item in  getCategory.categoryList" :key="item.id">
           <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
       </ul>
@@ -27,26 +30,9 @@
 <script setup lang="ts">
 // 引入路由组件
 import { RouterLink } from 'vue-router';
-//type CategoryItem = 导入CategoryItem这个类型定义
-//加上type关键字表示我们只是导入类型，不是导入实际的代码
-import { getCategoryAPI, type CategoryItem } from '@/apis/layout';
-import { onMounted,ref } from 'vue';
+import { useCategoryStore } from '@/stores/category'
 
-// - ref<CategoryItem[]> =
-// 告诉TypeScript这个响应式变量存储的是CategoryItem类型的数组
-//  - <CategoryItem[]> = 这叫"泛型"，就是给ref指定具体的类型
-const categoryList = ref<CategoryItem[]>([])
-const getCategory = async () =>{
-  const res = await getCategoryAPI()
-  console.log(res.result)
-  categoryList.value = res.result
-}
-
-onMounted(
-()=>{
-    getCategory()
-}
-)
+const getCategory = useCategoryStore()
 </script>
 
 <style scoped lang='scss'>

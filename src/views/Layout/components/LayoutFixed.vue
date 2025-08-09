@@ -5,6 +5,13 @@ import { useScroll } from '@vueuse/core'
 // 然后通过对象解构的方式，从useScroll函数返回的对象中提取出y属性。
 // y通常表示窗口在垂直方向上的滚动距离，即页面垂直滚动了多少像素。例如，当用户向下滚动页面时，y的值会逐渐增大。
 const { y } = useScroll(window)
+import { RouterLink } from 'vue-router';
+
+import { useCategoryStore } from '@/stores/category'
+
+const getCategory = useCategoryStore()
+
+
 </script>
 
 <template>
@@ -16,32 +23,8 @@ const { y } = useScroll(window)
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li>
-          <RouterLink to="/">居家</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">美食</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">服饰</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">母婴</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">个护</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">严选</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">数码</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">运动</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">杂项</RouterLink>
+        <li class="home" v-for="item in getCategory.categoryList" :key="item.id">
+          <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
       </ul>
 
@@ -75,7 +58,7 @@ const { y } = useScroll(window)
 
   // 状态二：移除平移 + 完全不透明
   &.show {
-    transition: all 0.2s linear;/* 动画过渡：所有变化在0.3秒内完成 */
+    transition: all 0.4s linear;/* 动画过渡：所有变化在0.4秒内完成 */
     transform: none;/* 取消移动（回到原来的位置） */
     opacity: 1;/* 完全不透明（可见） */
   }
