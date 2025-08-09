@@ -10,7 +10,26 @@ export interface CategoryItem {
   id: string;
   name: string;
   picture: string;
-  children: CategoryItem[];
+  children: Children[];
+  goods:Goods[];
+}
+
+//定义children返回的数据类型
+export interface Children {
+  id: string;
+  name: string;
+  picture: string;
+  children:null;
+  goods:null;
+}
+
+export interface Goods {
+  id: string;
+  name: string;
+  desc: string;
+  price: string;
+  picture: string;
+  orderNum:null;
 }
 
 // 定义API响应接口
