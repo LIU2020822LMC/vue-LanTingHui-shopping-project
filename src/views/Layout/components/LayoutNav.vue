@@ -3,7 +3,7 @@
     <div class="container">
       <ul>
         <template v-if="isLogin">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>LMC</a></li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
@@ -35,7 +35,7 @@ const isLogin = ref(true);
 
 <style scoped lang="scss">
 .app-topnav {
-  background: #333;
+  background:#dbe2ef;
 
   ul {
     display: flex;
@@ -46,7 +46,7 @@ const isLogin = ref(true);
     li {
       a {
         padding: 0 15px;
-        color: #cdcdcd;
+        color: #112d4e;
         line-height: 1;
         display: inline-block;
 

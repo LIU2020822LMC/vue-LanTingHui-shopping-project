@@ -56,7 +56,7 @@
             <a href="javascript:;">搜索推荐</a>
             <a href="javascript:;">友情链接</a>
           </p>
-          <p>CopyRight © 小兔鲜儿</p>
+          <p>CopyRight © 澜庭汇</p>
         </div>
       </div>
     </div>
@@ -153,7 +153,7 @@
         margin-top: 5px;
         color: #fff;
         border-radius: 2px;
-        background-color: $xtxColor;
+        background-color: #c9d6df;
       }
     }
 
@@ -174,7 +174,7 @@
   }
 
   .extra {
-    background-color: #333;
+    background-color: #112d4e;
   }
 
   .slogan {
