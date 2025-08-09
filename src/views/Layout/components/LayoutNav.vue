@@ -35,7 +35,7 @@ const isLogin = ref(true);
 
 <style scoped lang="scss">
 .app-topnav {
-  background:#dbe2ef;
+  background:#112d4e;
 
   ul {
     display: flex;
@@ -46,7 +46,7 @@ const isLogin = ref(true);
     li {
       a {
         padding: 0 15px;
-        color: #112d4e;
+        color: #f9f7f7;
         line-height: 1;
         display: inline-block;
 

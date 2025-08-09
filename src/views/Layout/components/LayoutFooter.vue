@@ -153,7 +153,7 @@
         margin-top: 5px;
         color: #fff;
         border-radius: 2px;
-        background-color: #c9d6df;
+        background-color: #112d4e;
       }
     }
 
