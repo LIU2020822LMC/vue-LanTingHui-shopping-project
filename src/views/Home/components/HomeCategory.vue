@@ -37,7 +37,7 @@ const getCategory = useCategoryStore()
 .home-category {
   width: 250px;
   height: 500px;
-  background: #3490de;
+  background: #3f72af;
   position: relative;
   z-index: 99;
 
