@@ -52,3 +52,33 @@ export const findNewAPI = (): Promise<NewResponse> => {
     url:'/home/new'
   })
 }
+
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+
+//人气推荐相关接口配置
+
+export interface HotItem {
+  id: string;
+  picture: string;
+  title:string
+  alt: number;
+}
+
+export interface HotResponse {
+  code: string;
+  msg: string;
+  result: HotItem[];
+}
+
+/**
+ * @description: 获取人气推荐
+ * @param {*}
+ * @return {*}
+ */
+export const getHotAPI = (): Promise<HotResponse> => {
+  return request({
+    url: "home/hot",
+  });
+};

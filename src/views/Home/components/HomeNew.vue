@@ -7,7 +7,7 @@ const newList = ref<NewItem[]>([])
 
 const getNew =async () =>{
   const res = await findNewAPI()
-  console.log(res)
+  // console.log(res)
   newList.value = res.result
 }
 
@@ -15,13 +15,14 @@ onMounted(()=>getNew())
 </script>
 
 <template>
+  <!-- 新鲜好物组件 -->
   <HomePanel title="精选好货" sub-title="臻选上新 优质之选">
     <ul class="goods-list">
       <li v-for="item in newList" :key="item.id">
         <RouterLink to="/">
-          <img :src="item.picture" alt="" />
+          <img :src="item.picture" alt="图片资源请求错误" />
           <p class="name">{{ item.name }}</p>
-          <p class="price">&yen;{{ item.price }}</p>
+          <p class="price">¥{{ item.price }}</p>
         </RouterLink>
       </li>
     </ul>
