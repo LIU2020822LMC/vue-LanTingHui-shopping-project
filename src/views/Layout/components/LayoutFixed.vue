@@ -24,7 +24,7 @@ const getCategory = useCategoryStore()
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li class="home" v-for="item in getCategory.categoryList" :key="item.id">
-          <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+          <RouterLink active-class="active" :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         </li>
       </ul>
 
@@ -89,7 +89,7 @@ const getCategory = useCategoryStore()
       line-height: 1;
 
       &:hover {
-        color: LTHColor;
+        color: #3f72af;
       }
     }
   }
@@ -114,14 +114,14 @@ const getCategory = useCategoryStore()
       display: inline-block;
 
       &:hover {
-        color: LTHColor;
-        border-bottom: 1px solid LTHColor;
+        color: #3f72af;
+        border-bottom: 1px solid #3f72af;
       }
     }
 
     .active {
-      color: LTHColor;
-      border-bottom: 1px solid LTHColor;
+      color: #3f72af;
+      border-bottom: 1px solid #3f72af;
     }
   }
 }

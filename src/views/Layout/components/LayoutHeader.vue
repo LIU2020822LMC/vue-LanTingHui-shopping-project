@@ -5,11 +5,11 @@
         <RouterLink to="/">澜庭汇</RouterLink>
       </h1>
       <ul class="app-header-nav">
-        <li class="home" >
+        <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li class="home" v-for="item in  getCategory.categoryList" :key="item.id">
-          <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+          <RouterLink active-class="active" :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         </li>
       </ul>
       <div class="search">
@@ -75,14 +75,14 @@ const getCategory = useCategoryStore()
         display: inline-block;
 
         &:hover {
-          color: $sucColor;
-          border-bottom: 1px solid $sucColor;
+          color: #3f72af;
+          border-bottom: 1px solid #3f72af;
         }
       }
 
       .active {
-        color: $sucColor;
-        border-bottom: 1px solid $sucColor;
+        color: #3f72af;
+        border-bottom: 1px solid #3f72af;
       }
     }
   }
