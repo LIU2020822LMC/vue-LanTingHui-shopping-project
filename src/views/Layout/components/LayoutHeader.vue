@@ -9,7 +9,7 @@
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li class="home" v-for="item in  getCategory.categoryList" :key="item.id">
-          <RouterLink to="/">{{ item.name }}</RouterLink>
+          <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         </li>
       </ul>
       <div class="search">
@@ -75,14 +75,14 @@ const getCategory = useCategoryStore()
         display: inline-block;
 
         &:hover {
-          color: $LTHColor;
-          border-bottom: 1px solid $LTHColor;
+          color: $sucColor;
+          border-bottom: 1px solid $sucColor;
         }
       }
 
       .active {
-        color: $LTHColor;
-        border-bottom: 1px solid $LTHColor;
+        color: $sucColor;
+        border-bottom: 1px solid $sucColor;
       }
     }
   }
