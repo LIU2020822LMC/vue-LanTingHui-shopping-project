@@ -17,7 +17,7 @@ export const ImgLazyPlugin = {
         const { stop } = useIntersectionObserver(
           el, // 监听的元素
           ([{ isIntersecting }]) => {
-            console.log(isIntersecting)
+            // console.log(isIntersecting)
             // 当元素进入视口时 isIntersecting 为 true
             if (isIntersecting) {
               // 设置图片的 src 属性，开始加载图片

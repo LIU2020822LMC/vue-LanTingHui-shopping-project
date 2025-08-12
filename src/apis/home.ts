@@ -14,7 +14,7 @@ export interface BannerResponse {
 }
 
 export  function getBannerAPI(): Promise<BannerResponse> {
-  return request({
+  return request ({
     url: "/home/banner",
   });
 }
@@ -80,5 +80,54 @@ export interface HotResponse {
 export const getHotAPI = (): Promise<HotResponse> => {
   return request({
     url: "home/hot",
+  });
+};
+
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+
+//产品列表相关接口配置
+
+export interface GoodsChildrenItem{
+  id:string;
+  name:string;
+  layer:string;
+  parent:null;
+}
+
+export interface GoodsGoodsItem{
+  id:string;
+  name:string;
+  desc:string;
+  price:string;
+  picture:string;
+  orderNum:number;
+}
+
+export interface GoodsItem {
+  id: string;
+  name: string;
+  picture: string;
+  saleInfo: string;
+  children: GoodsChildrenItem[];
+  goods: GoodsGoodsItem[];
+}
+
+export interface GoodsResponse {
+  code: string;
+  msg: string;
+  result: GoodsItem[];
+}
+
+
+/**
+ * @description: 获取所有商品模块
+ * @param {*}
+ * @return {*}
+ */
+export const getGoodsAPI = (): Promise<GoodsResponse> => {
+  return request ({
+    url: "/home/goods",
   });
 };
