@@ -56,7 +56,7 @@ const isLogin = ref(true);
         }
 
         &:hover {
-          color: $LTHColor;
+          color: #3d84a8;
         }
       }
 
