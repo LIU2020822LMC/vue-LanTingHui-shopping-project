@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { getBannerAPI, type BannerItem } from "@/apis/home"
 import {ref,onMounted} from "vue"
- 
- const BannerList = ref<BannerItem[]>([])
+
+const BannerList = ref<BannerItem[]>([])
 const getBanner = async () =>{
   const res = await getBannerAPI()
   // console.log(res)

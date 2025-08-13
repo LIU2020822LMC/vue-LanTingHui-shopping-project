@@ -7,15 +7,25 @@ export interface BannerItem {
   type: string;
 }
 
+//为params参数定义一个明确的接口类型
+interface BannerParams {
+  distributionSite?: number; // 问号表示这是可选属性
+}
+
 export interface BannerResponse {
   code: string;
   msg: string;
   result: BannerItem[];
 }
 
-export  function getBannerAPI(): Promise<BannerResponse> {
-  return request ({
+export  function getBannerAPI(params: BannerParams = {}): Promise<BannerResponse> {
+  //默认为1，商品为2
+  const { distributionSite = 1 } = params;
+  return request({
     url: "/home/banner",
+    params: {
+      distributionSite,
+    },
   });
 }
 
@@ -45,7 +55,7 @@ export interface NewResponse {
  * @description: 获取新鲜好物
  * @param {*}
  * @return {*}
- * 
+ *
  */
 export const findNewAPI = (): Promise<NewResponse> => {
   return request({
