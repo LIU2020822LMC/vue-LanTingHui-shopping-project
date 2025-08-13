@@ -3,6 +3,7 @@ import { getCategoryAPI, type CategoryItem } from '@/apis/category'
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getBannerAPI, type BannerItem } from "@/apis/home"
+import GoodsItem from '../Home/components/GoodsItem.vue';
 
 //获取分类列表数据
 //根据 category.ts 文件中的定义，为 categoryData 提供一个包含所有必需属性的初始值：{id: '', name: '', picture: null, children: []}
@@ -46,6 +47,26 @@ onMounted(() => getCategory())
             <img :src="item.imgUrl" alt="图片资源请求失败">
           </el-carousel-item>
         </el-carousel>
+      </div>
+
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryData.children" :key="i.id">
+            <RouterLink to="/">
+              <img :src="i.picture" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :goods="good" :key="good.id" />
+        </div>
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@ export interface CategoryChildrenItem {
   name: string;
   picture: string;
   parentName: null;
-  goods: CategoryChildrenGoodsItem;
+  goods: CategoryChildrenGoodsItem[];
   categories:null;
   brands:null;
   saleProperties:null;
