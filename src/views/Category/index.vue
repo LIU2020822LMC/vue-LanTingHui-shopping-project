@@ -1,40 +1,16 @@
 <script setup lang="ts">
-import { getCategoryAPI, type CategoryItem } from '@/apis/category'
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getBannerAPI, type BannerItem } from "@/apis/home"
+import { useCategory } from "@/views/Category/composables/useCategory";
 import GoodsItem from '../Home/components/GoodsItem.vue';
-import { onBeforeRouteUpdate } from 'vue-router';
+import {useBanner} from '@/views/Category/composables/useBanner'
 
-//获取分类列表数据
-//根据 category.ts 文件中的定义，为 categoryData 提供一个包含所有必需属性的初始值：{id: '', name: '', picture: null, children: []}
-//这样初始化后，TypeScript 不会再报错，因为现在提供的初始值完全符合 CategoryItem 接口的类型要求。
-// 当 API 请求成功后，这些初始值会被实际数据替换。
-const categoryData = ref<CategoryItem>({ id: '', name: '', picture: null, children: [] })
-const route = useRoute()
-const getCategory = async (id = route.params.id) => {
-  const res = await getCategoryAPI(id)
-  categoryData.value = res.result
-}
-
-//目标：路由参数变化的时候，可以把分类数据接口重新发送
-onBeforeRouteUpdate((to)=>{
-  //更新后获得的数据
-  getCategory(to.params.id)
-})
+//获取分类数据
+const {categoryData} = useCategory()
 
 //获取banner
-const BannerList = ref<BannerItem[]>([])
-const getBanner = async () => {
-  const res = await getBannerAPI({ distributionSite: 2 })
-  // console.log(res)
-  BannerList.value = res.result
-}
+const {BannerList} = useBanner()
 
-onMounted(() => getBanner())
 
-//初始化得到的数据
-onMounted(() => getCategory())
+
 </script>
 
 <template>
