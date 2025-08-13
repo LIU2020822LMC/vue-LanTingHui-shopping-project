@@ -19,7 +19,7 @@ const {BannerList} = useBanner()
       <!-- 面包屑 -->
       <div class="bread-container">
         <!-- <el-breadcrumb> 是面包屑的容器组件，用来包裹所有的面包屑项 -->
-        <el-breadcrumb separator="/">
+        <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
         </el-breadcrumb>
@@ -37,7 +37,7 @@ const {BannerList} = useBanner()
         <h3>全部分类</h3>
         <ul>
           <li v-for="i in categoryData.children" :key="i.id">
-            <RouterLink to="/">
+            <RouterLink :to="`/category/sub/${i.id}`">
               <img :src="i.picture" />
               <p>{{ i.name }}</p>
             </RouterLink>
