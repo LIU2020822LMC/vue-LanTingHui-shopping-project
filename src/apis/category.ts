@@ -125,3 +125,57 @@ export const getCategoryFilterAPI = (id: string[] | string):Promise<CategoryFilt
     },
   });
 };
+
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+
+//基础列表数据接口相关配置
+
+export interface ResultItems{
+  id:string;
+  name:string;
+  desc:string;
+  price:string;
+  picture:string;
+  orderNum:number;
+}
+
+export interface SubCategoryItem{
+  counts:number;
+  pageSize:number;
+  pages:number;
+  page:number;
+  items:ResultItems[];
+}
+
+export interface SubCategoryResponse {
+  code: string;
+  msg: string;
+  result: SubCategoryItem;
+}
+
+export interface SubCategoryParams {
+  categoryId: string | string[];
+  page: number;
+  pageSize: number;
+  sortField: "publishTime" | "orderNum" | "evaluateNum";
+}
+
+/**
+ * @description: 获取导航数据
+ * @data {
+     categoryId: 1005000 ,
+     page: 1,
+     pageSize: 20,
+     sortField: 'publishTime' | 'orderNum' | 'evaluateNum'
+   }
+ * @return {*}
+ */
+   export const getSubCategoryAPI = (data: SubCategoryParams): Promise<SubCategoryResponse> => {
+     return request({
+       url: "/category/goods/temporary",
+       method: "POST",
+       data,
+     });
+   };

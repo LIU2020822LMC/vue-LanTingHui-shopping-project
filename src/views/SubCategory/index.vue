@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { getCategoryFilterAPI, type CategoryFilterResultItem } from "@/apis/category";
+import { getCategoryFilterAPI, type CategoryFilterResultItem, getSubCategoryAPI, type SubCategoryItem, type SubCategoryParams } from "@/apis/category";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import GoodsItem from "../Home/components/GoodsItem.vue";
 
+//获取面包屑导航数据
 const route = useRoute()
 const categoryList = ref<CategoryFilterResultItem>({ id: "", name: "", picture: null, parentId: "", parentName: "", goods: [], categories: [], brands: [], saleProperties: [] })
 const getCategoryFilter = async () => {
@@ -11,6 +13,26 @@ const getCategoryFilter = async () => {
 }
 onMounted(() => getCategoryFilter())
 
+//获取基础列表数据渲染
+const goodsList = ref<SubCategoryItem>({
+  counts: 1,
+  pageSize: 1,
+  pages: 1,
+  page: 1,
+  items: []
+})
+const dataList = ref <SubCategoryParams> ({
+  categoryId: route.params.id,
+  page: 1,
+  pageSize: 20,
+  sortField: "publishTime"
+})
+const getGoodsList = async () =>{
+  const res = await getSubCategoryAPI(dataList.value)
+  goodsList.value = res.result
+}
+
+onMounted(() => getGoodsList())
 </script>
 
 <template>
@@ -19,7 +41,8 @@ onMounted(() => getCategoryFilter())
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/category/${categoryList.parentId}` }">{{ categoryList.parentName }}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/category/${categoryList.parentId}` }">{{ categoryList.parentName
+          }}</el-breadcrumb-item>
         <el-breadcrumb-item>{{ categoryList.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -31,6 +54,7 @@ onMounted(() => getCategoryFilter())
       </el-tabs>
       <div class="body">
         <!-- 商品列表-->
+        <GoodsItem v-for="goods in goodsList.items" :goods="goods" :key="goods.id"/>
       </div>
     </div>
   </div>
