@@ -32,6 +32,14 @@ const getGoodsList = async () =>{
   goodsList.value = res.result
 }
 
+//点击切换事件函数
+const tabCharge = () =>{
+  //为什么要重置为1？当用户切换排序方式时，需要重新从第一页开始显示数据
+  //这样的用户体验更好，不会让用户停留在之前排序方式的某个中间页面。
+  dataList.value.page=1
+  getGoodsList()
+}
+
 onMounted(() => getGoodsList())
 </script>
 
@@ -47,7 +55,7 @@ onMounted(() => getGoodsList())
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs>
+      <el-tabs v-model="dataList.sortField" @tab-change="tabCharge">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
