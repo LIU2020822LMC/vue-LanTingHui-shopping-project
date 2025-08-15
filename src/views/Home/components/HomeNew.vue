@@ -19,7 +19,7 @@ onMounted(()=>getNew())
   <HomePanel title="精选好货" sub-title="臻选上新 优质之选">
     <ul class="goods-list">
       <li v-for="item in newList" :key="item.id">
-        <RouterLink to="/">
+        <RouterLink :to="`/detail/${item.id}`">
           <img :src="item.picture" alt="图片资源请求错误" />
           <p class="name">{{ item.name }}</p>
           <p class="price">¥{{ item.price }}</p>
@@ -38,7 +38,7 @@ onMounted(()=>getNew())
 </li>
 </ul>
 -->
-</template> 
+</template>
 
 
 <style scoped lang='scss'>

@@ -21,6 +21,10 @@ const router = createRouter({
           path: "category/sub/:id",
           component: () => import("@/views/SubCategory/index.vue"),
         },
+        {
+          path: "detail/:id",
+          component: () => import("@/views/Detail/index.vue"),
+        },
       ],
     },
     {
@@ -29,12 +33,12 @@ const router = createRouter({
     },
   ],
   //路由滚动行为定制(当切换路由的时候，滚动条自动平滑回到顶部)
-  scrollBehavior(){
-    return{
-      behavior:'smooth',
-      top:0
-    }
-  }
+  scrollBehavior() {
+    return {
+      behavior: "smooth",
+      top: 0,
+    };
+  },
 });
 
 export default router
