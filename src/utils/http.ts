@@ -16,9 +16,26 @@ request.interceptors.request.use(config =>{
 },e => Promise.reject(e))
 
 //axios响应式拦截器
-request.interceptors.response.use(res => res.data,e=>{
-  return Promise.reject(e)
-})
+request.interceptors.response.use(
+  //返回res.data是为了只提取响应体数据，让调用方直接拿到业务数据，而不需要每次都response.data
+  //实际流程：
+  // 1.服务器返回的是已经是JSON格式的数据
+  // 2.Axios会自动将JSON响应解析成JavaScript对象
+  // 3.拦截器只是帮你把response.data提取出来，省去了每次都要.data的步骤
+  // 举个例子：
+  //没有拦截器时
+  // const response = await request.get('/api/goods')
+  // const data = response.data  // 需要手动.data
+
+  // 有拦截器时
+  // const data = await request.get('/api/goods')  // 直接拿到数据
+  (res) => res.data,
+
+
+  (e) => {
+    return Promise.reject(e);
+  }
+);
 
 
 export default request

@@ -1,4 +1,17 @@
 <script setup lang="ts">
+import { getDetailAPI, type DetailResultItem } from '@/apis/detail'
+import {ref,onMounted} from "vue"
+import { useRoute } from 'vue-router';
+
+//获取商品详情数据
+const route = useRoute()
+const goodsDetail = ref<DetailResultItem | null>(null)
+const getDetail = async (id:string | string[]) =>{
+  const res = await getDetailAPI(id)
+  goodsDetail.value = res.result
+}
+
+onMounted(() => getDetail(route.params.id))
 
 </script>
 
@@ -8,9 +21,9 @@
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/' }">母婴</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/' }">跑步鞋</el-breadcrumb-item>
-          <el-breadcrumb-item>抓绒保暖，毛毛虫子儿童运动鞋</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/${goodsDetail?.categories?.[1].id}` }">{{ goodsDetail?.categories?.[1].name }}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/sub/${goodsDetail?.categories?.[0].id}` }">{{ goodsDetail?.categories?.[0].name }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ goodsDetail?.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <!-- 商品信息 -->
@@ -24,33 +37,33 @@
               <ul class="goods-sales">
                 <li>
                   <p>销量人气</p>
-                  <p>100+</p>
+                  <p>{{ goodsDetail?.salesCount }}+</p>
                   <p><i class="iconfont icon-a-appround47"></i>销量人气</p>
                 </li>
                 <li>
                   <p>商品评价</p>
-                  <p>200+</p>
+                  <p>{{ goodsDetail?.commentCount }}+</p>
                   <p><i class="iconfont icon-pingjia1"></i>查看评价</p>
                 </li>
                 <li>
                   <p>收藏人气</p>
-                  <p>300+</p>
+                  <p>{{ goodsDetail?.collectCount }}+</p>
                   <p><i class="iconfont icon-pingjia"></i>收藏商品</p>
                 </li>
                 <li>
                   <p>品牌信息</p>
-                  <p>400+</p>
+                  <p>{{ goodsDetail?.brand?.name }}</p>
                   <p><i class="iconfont icon-fengche"></i>品牌主页</p>
                 </li>
               </ul>
             </div>
             <div class="spec">
               <!-- 商品信息区 -->
-              <p class="g-name">抓绒保暖，毛毛虫儿童鞋</p>
-              <p class="g-desc">好穿</p>
+              <p class="g-name">{{ goodsDetail?.name || '商品名称' }}</p>
+              <p class="g-desc">{{ goodsDetail?.desc || '商品描述' }}</p>
               <p class="g-price">
-                <span>200</span>
-                <span>100</span>
+                <span>{{ goodsDetail?.oldPrice || '0' }}</span>
+                <span>{{ goodsDetail?.price || '0' }}</span>
               </p>
               <div class="g-service">
                 <dl>
@@ -90,13 +103,13 @@
                 <div class="goods-detail">
                   <!-- 属性 -->
                   <ul class="attrs">
-                    <li v-for="item in 3" :key="item">
-                      <span class="dt">白色</span>
-                      <span class="dd">纯棉</span>
+                    <li v-for="item in goodsDetail?.details?.properties" :key="item?.value">
+                      <span class="dt">{{ item?.name }}</span>
+                      <span class="dd">{{ item?.value }}</span>
                     </li>
                   </ul>
                   <!-- 图片 -->
-
+                  <img v-for="img in goodsDetail?.details?.pictures" v-img-lazy="img" :key="img" alt="图片资源请求失败" />
                 </div>
               </div>
             </div>
