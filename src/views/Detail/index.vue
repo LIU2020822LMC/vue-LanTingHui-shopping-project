@@ -3,6 +3,7 @@ import { getDetailAPI, type DetailResultItem } from '@/apis/detail'
 import {ref,onMounted} from "vue"
 import { useRoute } from 'vue-router';
 import DetailHot from './components/DetailHot.vue';
+import ImageView from "@/components/ImageView/index.vue"
 
 //获取商品详情数据
 const route = useRoute()
@@ -35,7 +36,7 @@ onMounted(() => getDetail(route.params.id))
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-
+              <ImageView />
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
@@ -59,74 +60,74 @@ onMounted(() => getDetail(route.params.id))
                   <p><i class="iconfont icon-fengche"></i>品牌主页</p>
                 </li>
               </ul>
+          </div>
+          <div class="spec">
+            <!-- 商品信息区 -->
+            <p class="g-name">{{ goodsDetail?.name || '商品名称' }}</p>
+            <p class="g-desc">{{ goodsDetail?.desc || '商品描述' }}</p>
+            <p class="g-price">
+              <span>{{ goodsDetail?.oldPrice || '0' }}</span>
+              <span>{{ goodsDetail?.price || '0' }}</span>
+            </p>
+            <div class="g-service">
+              <dl>
+                <dt>促销</dt>
+                <dd>12月好物放送，App领券购买直降120元</dd>
+              </dl>
+              <dl>
+                <dt>服务</dt>
+                <dd>
+                  <span>无忧退货</span>
+                  <span>快速退款</span>
+                  <span>免费包邮</span>
+                  <a href="javascript:;">了解详情</a>
+                </dd>
+              </dl>
             </div>
-            <div class="spec">
-              <!-- 商品信息区 -->
-              <p class="g-name">{{ goodsDetail?.name || '商品名称' }}</p>
-              <p class="g-desc">{{ goodsDetail?.desc || '商品描述' }}</p>
-              <p class="g-price">
-                <span>{{ goodsDetail?.oldPrice || '0' }}</span>
-                <span>{{ goodsDetail?.price || '0' }}</span>
-              </p>
-              <div class="g-service">
-                <dl>
-                  <dt>促销</dt>
-                  <dd>12月好物放送，App领券购买直降120元</dd>
-                </dl>
-                <dl>
-                  <dt>服务</dt>
-                  <dd>
-                    <span>无忧退货</span>
-                    <span>快速退款</span>
-                    <span>免费包邮</span>
-                    <a href="javascript:;">了解详情</a>
-                  </dd>
-                </dl>
+            <!-- sku组件 -->
+
+            <!-- 数据组件 -->
+
+            <!-- 按钮组件 -->
+            <div>
+              <el-button size="large" class="btn">
+                加入购物车
+              </el-button>
+            </div>
+
+          </div>
+        </div>
+        <div class="goods-footer">
+          <div class="goods-article">
+            <!-- 商品详情 -->
+            <div class="goods-tabs">
+              <nav>
+                <a>商品详情</a>
+              </nav>
+              <div class="goods-detail">
+                <!-- 属性 -->
+                <ul class="attrs">
+                  <li v-for="item in goodsDetail?.details?.properties" :key="item?.value">
+                    <span class="dt">{{ item?.name }}</span>
+                    <span class="dd">{{ item?.value }}</span>
+                  </li>
+                </ul>
+                <!-- 图片 -->
+                <img v-for="img in goodsDetail?.details?.pictures" v-img-lazy="img" :key="img" alt="图片资源请求失败" />
               </div>
-              <!-- sku组件 -->
-
-              <!-- 数据组件 -->
-
-              <!-- 按钮组件 -->
-              <div>
-                <el-button size="large" class="btn">
-                  加入购物车
-                </el-button>
-              </div>
-
             </div>
           </div>
-          <div class="goods-footer">
-            <div class="goods-article">
-              <!-- 商品详情 -->
-              <div class="goods-tabs">
-                <nav>
-                  <a>商品详情</a>
-                </nav>
-                <div class="goods-detail">
-                  <!-- 属性 -->
-                  <ul class="attrs">
-                    <li v-for="item in goodsDetail?.details?.properties" :key="item?.value">
-                      <span class="dt">{{ item?.name }}</span>
-                      <span class="dd">{{ item?.value }}</span>
-                    </li>
-                  </ul>
-                  <!-- 图片 -->
-                  <img v-for="img in goodsDetail?.details?.pictures" v-img-lazy="img" :key="img" alt="图片资源请求失败" />
-                </div>
-              </div>
-            </div>
-            <!-- 24热榜+专题推荐 -->
-            <div class="goods-aside">
-              <!-- 24小时 -->
-              <DetailHot :HotType=1 />
-              <!-- 周 -->
-              <DetailHot :HotType=2 />
-            </div>
+          <!-- 24热榜+专题推荐 -->
+          <div class="goods-aside">
+            <!-- 24小时 -->
+            <DetailHot :HotType=1 />
+            <!-- 周 -->
+            <DetailHot :HotType=2 />
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
