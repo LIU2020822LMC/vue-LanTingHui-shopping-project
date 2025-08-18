@@ -140,3 +140,41 @@ export const getDetailAPI = (id: string | string[]): Promise<DetailResponse> => 
     },
   });
 };
+
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+
+//热榜商品接口相关配置
+
+export interface ResultItem {
+  id: string;
+  name: string;
+  desc: string;
+  price: string;
+  picture: string;
+  orderNum: number;
+}
+
+export interface getHotGoodsResponse {
+  code: string;
+  msg: string;
+  result: ResultItem[];
+}
+
+/**
+ * 获取热榜商品
+ * @param {Number} id - 商品id
+ * @param {Number} type - 1代表24小时热销榜 2代表周热销榜
+ * @param {Number} limit - 获取个数
+ */
+export const getHotGoodsAPI = ({id, type, limit = 4}: {id?: string | string[]; type?: string | string[]; limit?: number}): Promise<getHotGoodsResponse> => {
+  return request({
+    url: "/goods/hot",
+    params: {
+      id,
+      type,
+      limit,
+    },
+  });
+};

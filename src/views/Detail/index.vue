@@ -2,6 +2,7 @@
 import { getDetailAPI, type DetailResultItem } from '@/apis/detail'
 import {ref,onMounted} from "vue"
 import { useRoute } from 'vue-router';
+import DetailHot from './components/DetailHot.vue';
 
 //获取商品详情数据
 const route = useRoute()
@@ -115,7 +116,10 @@ onMounted(() => getDetail(route.params.id))
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
-
+              <!-- 24小时 -->
+              <DetailHot />
+              <!-- 周 -->
+              <DetailHot />
             </div>
           </div>
         </div>
