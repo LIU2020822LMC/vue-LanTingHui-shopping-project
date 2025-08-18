@@ -22,8 +22,10 @@ onMounted(() => getDetail(route.params.id))
       <div class="bread-container">
         <el-breadcrumb separator=">">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/${goodsDetail?.categories?.[1].id}` }">{{ goodsDetail?.categories?.[1].name }}</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/category/sub/${goodsDetail?.categories?.[0].id}` }">{{ goodsDetail?.categories?.[0].name }}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/${goodsDetail?.categories?.[1].id}` }">{{
+            goodsDetail?.categories?.[1].name }}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/category/sub/${goodsDetail?.categories?.[0].id}` }">{{
+            goodsDetail?.categories?.[0].name }}</el-breadcrumb-item>
           <el-breadcrumb-item>{{ goodsDetail?.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -117,9 +119,9 @@ onMounted(() => getDetail(route.params.id))
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
               <!-- 24小时 -->
-              <DetailHot />
+              <DetailHot :HotType=1 />
               <!-- 周 -->
-              <DetailHot />
+              <DetailHot :HotType=2 />
             </div>
           </div>
         </div>

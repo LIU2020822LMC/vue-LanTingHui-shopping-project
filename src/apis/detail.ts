@@ -168,7 +168,15 @@ export interface getHotGoodsResponse {
  * @param {Number} type - 1代表24小时热销榜 2代表周热销榜
  * @param {Number} limit - 获取个数
  */
-export const getHotGoodsAPI = ({id, type, limit = 4}: {id?: string | string[]; type?: string | string[]; limit?: number}): Promise<getHotGoodsResponse> => {
+export const getHotGoodsAPI = ({
+  id,
+  type,
+  limit = 4,
+}: {
+  id?: string | string[];
+  type?: number;
+  limit?: number;
+}): Promise<getHotGoodsResponse> => {
   return request({
     url: "/goods/hot",
     params: {
