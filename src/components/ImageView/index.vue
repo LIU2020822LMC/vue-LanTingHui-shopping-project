@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import { useMouseInElement } from '@vueuse/core'
 import { ref, watch } from 'vue'
+
+// props适配图片列表
+defineProps({
+  imageList: {
+    // 为 imageList prop 添加了明确的类型定义，要声明这个数组是什么类型的
+    type: Array as () => string[],
+    default: () => []
+  }
+})
+
 // 图片列表
-const imageList = [
-  "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
-  "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
-  "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
-  "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
-  "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
-]
+// const imageList = [
+//   "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
+//   "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
+//   "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
+//   "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
+//   "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
+// ]
 
 //1.小图切换成大图显示
 const activeIndex = ref(0)
@@ -33,7 +43,9 @@ watch([elementX, elementY,isOutside], () => {
   console.log('后续逻辑执行了');
   //有效范围内控制滑块距离
   //横向
+  // 鼠标在100-300之间，滑块就跟着鼠标走
   if (elementX.value > 100 && elementX.value < 300) {
+    // 让滑块中心对准鼠标，left.value=滑块横向移动的距离
     left.value = elementX.value - 100
   }
   //纵向
@@ -48,6 +60,7 @@ watch([elementX, elementY,isOutside], () => {
   if (elementY.value < 100) { top.value = 0 }
 
   //控制大图显示
+  //大图移动的方向和滑块相反，而且移动距离是2倍
   positionX.value = -left.value * 2
   positionY.value = -top.value * 2
 })
