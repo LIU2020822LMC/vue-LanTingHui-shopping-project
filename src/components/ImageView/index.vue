@@ -38,6 +38,7 @@ const top = ref(0)
 const positionX = ref(0)
 const positionY = ref(0)
 watch([elementX, elementY,isOutside], () => {
+  //以下的逻辑实现有点复杂，需要时间思考思考
   console.log('xy变化了');
   if(isOutside.value) return
   console.log('后续逻辑执行了');
