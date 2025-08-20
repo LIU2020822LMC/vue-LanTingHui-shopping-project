@@ -6,10 +6,13 @@ import {ref} from "vue"
 const form = ref({
   account:'',
   password:'',
+  agree:false
 })
 
 //2.准备规则对象
-const rules = ({
+import type { FormRules } from 'element-plus'
+
+const rules: FormRules = {
   account: [
     { required: true, message: '用户名不能为空', trigger: 'blur' },
     { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
@@ -17,8 +20,19 @@ const rules = ({
   password:[
     { required: true, message: '密码不能为空', trigger: 'blur' },
     { min: 4, max: 16, message: '密码长度为4-16个字符（不分大小写）', trigger: 'blur' },
+  ],
+  agree:[
+    {
+      validator: (rules, value, callback) => {
+        if (!value) {
+          callback(new Error('请勾选同意协议'))
+        } else {
+          callback()
+        }
+      }
+    }
   ]
-})
+}
 </script>
 
 
@@ -51,8 +65,8 @@ const rules = ({
               <el-form-item prop="password" label="密码">
                 <el-input v-model="form.password" />
               </el-form-item>
-              <el-form-item label-width="22px">
-                <el-checkbox size="large">
+              <el-form-item label-width="22px" prop="agree">
+                <el-checkbox size="large" v-model="form.agree">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
