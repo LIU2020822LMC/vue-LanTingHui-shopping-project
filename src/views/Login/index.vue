@@ -1,6 +1,9 @@
 <script setup lang="ts">
 //表单验证（账号名+密码）
 import {ref} from "vue"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 //1.准备表单对象
 const form = ref({
@@ -33,6 +36,22 @@ const rules: FormRules = {
     }
   ]
 }
+
+//3.获取form实例做统一校验
+import type { FormInstance } from 'element-plus'
+
+//表明里面专门放FormInstance这种表单控制器
+const formRef = ref<FormInstance>()
+const doLogin = () => {
+  //调用实例方法
+  formRef.value?.validate((valid) => {
+    //valid:所有表单都通过校验 才为true
+    console.log(valid)
+    if (valid){
+      router.push('/login')
+    }
+  })
+}
 </script>
 
 
@@ -57,7 +76,7 @@ const rules: FormRules = {
         <div class="account-box">
           <div class="form">
             <!-- v-model是双向绑定（语法糖）:model是单向绑定（v-bind） -->
-            <el-form :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+            <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
               <!-- prop="account"与prop="password"这两个是指定表单域的校验字段名 -->
               <el-form-item prop="account" label="账户">
                 <el-input v-model="form.account" />
@@ -70,7 +89,7 @@ const rules: FormRules = {
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @Click="doLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
