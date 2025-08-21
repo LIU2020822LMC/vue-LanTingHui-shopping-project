@@ -2,6 +2,8 @@
 //表单验证（账号名+密码）
 import {ref} from "vue"
 import { useRouter } from "vue-router"
+import { loginAPI,} from "@/apis/user"
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
 
@@ -18,7 +20,6 @@ import type { FormRules } from 'element-plus'
 const rules: FormRules = {
   account: [
     { required: true, message: '用户名不能为空', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
   ],
   password:[
     { required: true, message: '密码不能为空', trigger: 'blur' },
@@ -43,12 +44,20 @@ import type { FormInstance } from 'element-plus'
 //表明里面专门放FormInstance这种表单控制器
 const formRef = ref<FormInstance>()
 const doLogin = () => {
+  const {account,password}  = form.value
   //调用实例方法
-  formRef.value?.validate((valid) => {
+  formRef.value?.validate(async (valid) => {
     //valid:所有表单都通过校验 才为true
     console.log(valid)
     if (valid){
-      router.push('/login')
+      const res = await loginAPI({ account, password })
+      if(res.code === "1"){
+        // 提示用户
+        ElMessage({ type: 'primary', message: '登录成功', showClose: true, })
+        //登录后重定向，避免用户回到登录页
+        router.replace('/')
+      }
+
     }
   })
 }

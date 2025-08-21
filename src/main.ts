@@ -6,6 +6,7 @@ import "@/styles/common.scss";
 import {ImgLazyPlugin} from "@/directives/index"
 //引入全局组件插件
 import { componentPlugin } from "./components";
+import 'element-plus/dist/index.css'
 import { createApp} from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";

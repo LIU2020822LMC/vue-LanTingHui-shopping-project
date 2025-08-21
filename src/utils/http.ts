@@ -1,5 +1,6 @@
 //axios基础的封装
 import axios from 'axios'
+import { ElMessage } from "element-plus";
 
 const request = axios.create({
   baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net",
@@ -30,9 +31,13 @@ request.interceptors.response.use(
   // 有拦截器时
   // const data = await request.get('/api/goods')  // 直接拿到数据
   (res) => res.data,
-
-
+  //统一错误提示
   (e) => {
+    ElMessage({
+      showClose: true,
+      message: e.response.data.message,
+      type: "error",
+    });
     return Promise.reject(e);
   }
 );
