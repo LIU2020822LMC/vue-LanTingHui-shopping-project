@@ -2,11 +2,11 @@
 //表单验证（账号名+密码）
 import {ref} from "vue"
 import { useRouter } from "vue-router"
-import { loginAPI,} from "@/apis/user"
 import { ElMessage } from 'element-plus'
+import { useUserStore } from "@/stores/user"
 
 const router = useRouter()
-
+const userStore = useUserStore()
 //1.准备表单对象
 const form = ref({
   account:'',
@@ -50,7 +50,8 @@ const doLogin = () => {
     //valid:所有表单都通过校验 才为true
     console.log(valid)
     if (valid){
-      const res = await loginAPI({ account, password })
+      await userStore.getUserInfo({ account, password })
+      const res = userStore.loginInfo
       if(res.code === "1"){
         // 提示用户
         ElMessage({ type: 'primary', message: '登录成功', showClose: true, })
