@@ -9,12 +9,17 @@ import { componentPlugin } from "./components";
 import 'element-plus/dist/index.css'
 import { createApp} from "vue";
 import { createPinia } from "pinia";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import App from "./App.vue";
 import router from "./router";
 
 const app = createApp(App);
+//将插件添加到 pinia 实例中
+//在设置state的时候会自动把数据同步给localstorage，在获取state数据的时候会优先从localStorage中取
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate);
+app.use(pinia);
 
-app.use(createPinia());
 app.use(router);
 app.use(ImgLazyPlugin)
 app.use(componentPlugin)

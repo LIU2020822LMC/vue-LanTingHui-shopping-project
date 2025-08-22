@@ -36,7 +36,7 @@ request.interceptors.response.use(
     ElMessage({
       showClose: true,
       message: e.response.data.message,
-      type: "error",
+      type: "error",   
     });
     return Promise.reject(e);
   }

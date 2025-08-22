@@ -77,12 +77,12 @@ export interface DetailResultItem {
   ];
   details: {
     pictures: string[];
-    properties:[
+    properties: [
       {
-        name:string,
-        value:string;
+        name: string;
+        value: string;
       }
-    ]
+    ];
   };
   isPreSale: boolean;
   isCollect: null;
