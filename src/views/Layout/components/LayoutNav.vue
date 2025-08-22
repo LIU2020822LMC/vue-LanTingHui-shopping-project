@@ -2,13 +2,13 @@
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <!-- 多模板渲染，区分登陆状态和非登录状态 -->
-        <template v-if="false">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>LMC</a></li>
+        <!-- 多模板渲染，区分登陆状态和非登录状态（用是否有token来区分） -->
+        <template v-if="userStore.userInfo?.token">
+          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{ userStore.userInfo.nickname }}</a></li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
-                <a href="javascript:;">退出登录</a>
+                <a href="javascript:;" >退出登录</a>
               </template>
             </el-popconfirm>
           </li>
@@ -26,12 +26,9 @@
 </template>
 
 <script setup lang="ts">
-// import { ref } from 'vue';
-// 引入Element Plus的Popconfirm组件
-import { ElPopconfirm } from 'element-plus';
+import { useUserStore } from "@/stores/user"
 
-// 登录状态变量，实际项目中可能从Vuex/Pinia或本地存储获取
-// const isLogin = ref(true);
+const userStore = useUserStore()
 </script>
 
 <style scoped lang="scss">

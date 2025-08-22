@@ -47,9 +47,6 @@ const getCategory = useCategoryStore()
       height: 55px;
       line-height: 55px;
 
-      &:hover {
-        background: $LTHColor;
-      }
 
       a {
         margin-right: 4px;
@@ -106,7 +103,7 @@ const getCategory = useCategoryStore()
               padding: 10px;
 
               &:hover {
-                background: #e3f9f4;
+                background: #dbe2ef;
               }
 
               img {
@@ -142,8 +139,9 @@ const getCategory = useCategoryStore()
         }
       }
 
-      // 关键样式  hover状态下的layer盒子变成block
+      // 关键样式  当鼠标悬停在这个li上时的layer盒子变成block
       &:hover {
+        background: $LTHColor;
         .layer {
           display: block;
         }
