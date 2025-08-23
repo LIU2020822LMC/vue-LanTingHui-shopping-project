@@ -17,10 +17,10 @@ export const useUserStore = defineStore(
       userInfo.value = res.result;
     };
     const clearUserInfo = () =>{
-      loginInfo.value = {};
-      userInfo.value = <loginResult>{}
-      // // 手动清除localStorage中的持久化数据
-      // localStorage.removeItem('user')
+      loginInfo.value = null
+      userInfo.value = null
+      // 手动清除localStorage中的持久化数据
+      localStorage.removeItem('user')
     }
     // 3.以对象的格式把state和action return
     return {

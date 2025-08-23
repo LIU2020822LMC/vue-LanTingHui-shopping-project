@@ -39,9 +39,9 @@ const positionX = ref(0)
 const positionY = ref(0)
 watch([elementX, elementY,isOutside], () => {
   //以下的逻辑实现有点复杂，需要时间思考思考
-  console.log('xy变化了');
+  // console.log('xy变化了');
   if(isOutside.value) return
-  console.log('后续逻辑执行了');
+  // console.log('后续逻辑执行了');
   //有效范围内控制滑块距离
   //横向
   // 鼠标在100-300之间，滑块就跟着鼠标走
