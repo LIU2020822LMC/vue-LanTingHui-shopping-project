@@ -3,7 +3,10 @@ import { getDetailAPI, type DetailResultItem } from '@/apis/detail'
 import {ref,onMounted} from "vue"
 import { useRoute } from 'vue-router';
 import DetailHot from './components/DetailHot.vue';
+import { ElMessage } from 'element-plus';
+import { useCartStore } from "@/stores/cartStores"
 
+const cartStores = useCartStore()
 //获取商品详情数据
 const route = useRoute()
 const goodsDetail = ref<DetailResultItem | null>(null)
@@ -14,11 +17,51 @@ const getDetail = async (id:string | string[]) =>{
 
 onMounted(() => getDetail(route.params.id))
 
-//sku规格被操作时
-const skuChange = (sku:DetailResultItem) =>{
-  console.log(sku)
+// 定义SKU选择后的数据类型
+interface SkuInfo {
+  skuId: string
+  price: string
+  oldPrice: string
+  inventory: number
+  specsText: string
 }
 
+//使用Partial让所有属性变为可选，因为初始时是空对象
+//整体意思就是声明一个类型为SkuInfo部分类型的变量skuObj，并初始化为空对象。
+//例如，如果SkuInfo类型有name、price等属性，skuObj可以只包含name属性，而没有price属性。
+let skuObj: Partial<SkuInfo> = {}
+//sku规格被操作时
+const skuChange = (sku: SkuInfo) =>{
+  console.log(sku)
+  skuObj = sku
+}
+
+//count
+const count = ref()
+const countChange = () => {
+  console.log(count.value);
+
+}
+
+//添加购物车
+const addCart = () => {
+  if (skuObj.skuId){
+    //规格已选择，触发action
+    cartStores.addCart({
+      id:goodsDetail.value?.id,
+      name:goodsDetail.value?.name,
+      picture:goodsDetail.value?.mainPictures[0],
+      price:goodsDetail.value?.price,
+      count:count.value,
+      skuId:skuObj.skuId,
+      attrsText:skuObj.specsText,
+      selected:true
+    })
+  }else{
+    //规格没选择，提示用户
+    ElMessage.warning("请选择规格")
+  }
+}
 </script>
 
 <template>
@@ -89,15 +132,15 @@ const skuChange = (sku:DetailResultItem) =>{
                 </dl>
               </div>
               <!-- sku组件 -->
-              <LthSku :goods="goodsDetail ?? undefined" @change="skuChange"/>
-                <!-- 数据组件 -->
-
-                <!-- 按钮组件 -->
-                <div>
-                  <el-button size="large" class="btn">
-                    加入购物车
-                  </el-button>
-                </div>
+              <LthSku :goods="goodsDetail ?? undefined" @change="skuChange" />
+              <!-- 数据组件 -->
+              <el-input-number v-model="count"  @change="countChange" />
+              <!-- 按钮组件 -->
+              <div>
+                <el-button size="large" class="btn" @click="addCart">
+                  加入购物车
+                </el-button>
+              </div>
 
             </div>
           </div>

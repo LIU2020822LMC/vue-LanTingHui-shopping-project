@@ -31,7 +31,7 @@ export const useUserStore = defineStore(
     };
   },
   //默认的持久化配置，存入localStorage
-  //每次登录都会把返回的相关信息（token什么的）存储到本地浏览器-->键：user 值：登录返回的信息
+  //每次用到action的方法，就会把state里面的数据存储到本地浏览器中，即键：本文件的名字 值：state数据
   {
     persist: true,
   }
