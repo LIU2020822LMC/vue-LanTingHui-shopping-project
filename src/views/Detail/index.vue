@@ -37,7 +37,7 @@ const skuChange = (sku: SkuInfo) =>{
 }
 
 //count
-const count = ref()
+const count = ref(1)
 const countChange = () => {
   console.log(count.value);
 
