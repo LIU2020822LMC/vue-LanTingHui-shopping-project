@@ -17,12 +17,7 @@
         <input type="text" placeholder="搜一搜">
       </div>
       <!-- 头部购物车 -->
-      <div class="cart">
-        <a href="javascript:;" class="curr">
-          <i class="iconfont icon-cart"></i>
-          <em>2</em>
-        </a>
-      </div>
+      <HeaderCart/>
     </div>
   </header>
 </template>
@@ -31,6 +26,7 @@
 // 引入路由组件
 import { RouterLink } from 'vue-router';
 import { useCategoryStore } from '@/stores/category'
+import HeaderCart from './HeaderCart.vue';
 
 const getCategory = useCategoryStore()
 </script>
@@ -109,34 +105,6 @@ const getCategory = useCategoryStore()
     }
   }
 
-  .cart {
-    width: 50px;
 
-    .curr {
-      height: 32px;
-      line-height: 32px;
-      text-align: center;
-      position: relative;
-      display: block;
-
-      .icon-cart {
-        font-size: 22px;
-      }
-
-      em {
-        font-style: normal;
-        position: absolute;
-        right: 0;
-        top: 0;
-        padding: 1px 6px;
-        line-height: 1;
-        background: $helpColor;
-        color: #fff;
-        font-size: 12px;
-        border-radius: 10px;
-        font-family: Arial;
-      }
-    }
-  }
 }
 </style>
