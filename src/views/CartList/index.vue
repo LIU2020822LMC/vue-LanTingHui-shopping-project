@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type CartItem,useCartStore } from "@/stores/cartStores"
+import {useCartStore } from "@/stores/cartStores"
 const CartStore = useCartStore()
 </script>
 
