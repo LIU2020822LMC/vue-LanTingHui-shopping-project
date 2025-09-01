@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref,computed } from "vue";
 
 // 定义购物车商品的类型
-interface CartItem {
+export interface CartItem {
   //这里的 “?” 表明 此属性 是可选的，即该数据结构中 此属性 字段可以存在，也可以不存在。
   id?: string;
   name?: string;
