@@ -88,14 +88,28 @@ export const useCartStore = defineStore(
     const isAll = computed(() => cartList.value.every((item) => item.selected));
 
     //全选功能
-    const AllSelect = ()=>{
+    const AllSelect = () => {
       if (!isAll.value) {
         cartList.value.forEach((item) => (item.selected = true));
-      }else{
+      } else {
         cartList.value.forEach((item) => (item.selected = false));
       }
+    };
 
-    }
+    // 购物车列表已选数量
+    const selectedCount = computed(() =>
+      cartList.value
+        .filter((item) => item.selected === true)
+        .reduce((sum, item) => sum + item.count, 0)
+    );
+
+    // 购物车列表已选商品总价
+    const selectedPrice = computed(() =>
+      cartList.value
+        .filter((item) => item.selected === true)
+        .reduce((sum, item) => sum + Number(item.price) * item.count, 0)
+    );
+
     return {
       cartList,
       addCart,
@@ -105,6 +119,8 @@ export const useCartStore = defineStore(
       Elected,
       isAll,
       AllSelect,
+      selectedCount,
+      selectedPrice,
     };
   },
   //

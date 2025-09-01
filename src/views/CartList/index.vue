@@ -48,7 +48,7 @@ const Eelected = (i: CartItem,selected:boolean) =>{
                 <p>￥{{ i.price }}</p>
               </td>
               <td class="tc">
-                <el-input-number v-model="i.count" />
+                <el-input-number v-model="i.count" :min="1"/>
               </td>
               <td class="tc">
                 <p class="f16 red">￥{{ (Number(i.price) * i.count).toFixed(2) }}</p>
@@ -79,8 +79,8 @@ const Eelected = (i: CartItem,selected:boolean) =>{
       <!-- 操作栏 -->
       <div class="action">
         <div class="batch">
-          共 {{ CartStore.totalCount }} 件商品，已选择 2 件，商品合计：
-          <span class="red">¥ {{ CartStore.totalPrice }} </span>
+          共 {{ CartStore.totalCount }} 件商品，已选择 {{ CartStore.selectedCount }} 件，商品合计：
+          <span class="red">¥ {{ CartStore.selectedPrice }} </span>
         </div>
         <div class="total">
           <el-button size="large" type="primary">下单结算</el-button>
