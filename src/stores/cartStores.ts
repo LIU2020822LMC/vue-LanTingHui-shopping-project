@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref,computed } from "vue";
 
 // 定义购物车商品的类型
 interface CartItem {
@@ -44,10 +44,24 @@ export const useCartStore = defineStore(
       //该语句的作用是从 cartList.value 数组中位于 idx 索引处开始删除 1 个元素。
       cartList.value.splice(idx, 1);
     };
+    // 计算商品总件数
+    //reduce 是 JavaScript 数组的一个方法。
+    // 它对数组中的每个元素按序执行一个 “累加器” 函数，将数组元素组合为一个单一的值
+    //0是sum的初始值，item是cartList的值
+    const totalCount = computed(() => {
+      return cartList.value.reduce((sum, item) => sum + item.count, 0);
+    });
+
+    //计算机商品总价
+    const totalPrice = computed(() => {
+      return cartList.value.reduce((sum, item) => sum + Number(item.price), 0);
+    });
     return {
       cartList,
       addCart,
       delCart,
+      totalCount,
+      totalPrice,
     };
   },
   //

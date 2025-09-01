@@ -1,19 +1,8 @@
 <script setup lang="ts">
 import { useCartStore } from '@/stores/cartStores';
-import { computed } from "vue"
 const cartStore = useCartStore()
 
-// 计算商品总件数
-//reduce 是 JavaScript 数组的一个方法。
-// 它对数组中的每个元素按序执行一个 “累加器” 函数，将数组元素组合为一个单一的值
-const totalCount = computed(() => {
-  return cartStore.cartList.reduce((sum, item) => sum + item.count, 0)
-})
 
-//计算机商品总价
-const totalPrice = computed(() => {
-  return cartStore.cartList.reduce((sum, item) => sum + Number(item.price), 0)
-})
 </script>
 
 <template>
@@ -44,8 +33,8 @@ const totalPrice = computed(() => {
       </div>
       <div class="foot">
         <div class="total">
-          <p>共 {{ totalCount }} 件商品</p>
-          <p>&yen; {{ totalPrice }} </p>
+          <p>共 {{ cartStore.totalCount }} 件商品</p>
+          <p>&yen; {{ cartStore.totalPrice }} </p>
         </div>
         <el-button size="large" type="primary">去购物车结算</el-button>
       </div>
