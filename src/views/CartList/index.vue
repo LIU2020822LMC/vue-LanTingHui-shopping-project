@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import {useCartStore } from "@/stores/cartStores"
+import { type CartItem, useCartStore } from "@/stores/cartStores"
 const CartStore = useCartStore()
+
+const Eelected = (i: CartItem,selected:boolean) =>{
+  console.log(i,selected);
+  CartStore.Elected(i.skuId,selected)
+}
 </script>
 
 <template>
@@ -24,7 +29,8 @@ const CartStore = useCartStore()
           <tbody>
             <tr v-for="i in CartStore.cartList" :key="i.id">
               <td>
-                <el-checkbox />
+                <!-- 单选框 -->
+                <el-checkbox v-model="i.selected" @change="(selected:boolean)=>Eelected(i,selected)"/>
               </td>
               <td>
                 <div class="goods">

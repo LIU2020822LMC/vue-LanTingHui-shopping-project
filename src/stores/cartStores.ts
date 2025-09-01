@@ -56,12 +56,23 @@ export const useCartStore = defineStore(
     const totalPrice = computed(() => {
       return cartList.value.reduce((sum, item) => sum + Number(item.price), 0);
     });
+
+    //选择框
+    const Elected = (skuId:string,selected:boolean)=>{
+      const item = cartList.value.find((item)=> item.skuId = skuId)
+      if (item) {
+        item.selected = selected;
+      } else {
+        console.warn(`未找到 skuId 为 ${skuId} 的商品`);
+      }
+    }
     return {
       cartList,
       addCart,
       delCart,
       totalCount,
       totalPrice,
+      Elected,
     };
   },
   //
