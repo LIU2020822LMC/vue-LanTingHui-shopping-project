@@ -16,7 +16,8 @@ const Eelected = (i: CartItem,selected:boolean) =>{
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox />
+                <!-- 全选功能框 -->
+                <el-checkbox :model-value="CartStore.isAll" @change="CartStore.AllSelect"/>
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>
@@ -30,7 +31,8 @@ const Eelected = (i: CartItem,selected:boolean) =>{
             <tr v-for="i in CartStore.cartList" :key="i.id">
               <td>
                 <!-- 单选框 -->
-                <el-checkbox v-model="i.selected" @change="(selected:boolean)=>Eelected(i,selected)"/>
+                <!-- selected 参数是自动传入的，代表当前的选中状态 -->
+                <el-checkbox v-model="i.selected" @change="(selected:boolean)=>Eelected(i,selected)" />
               </td>
               <td>
                 <div class="goods">
@@ -53,7 +55,8 @@ const Eelected = (i: CartItem,selected:boolean) =>{
               </td>
               <td class="tc">
                 <p>
-                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="CartStore.delCart(i.skuId)">
+                  <el-popconfirm title="确认删除吗?" confirm-button-text="确认" cancel-button-text="取消"
+                    @confirm="CartStore.delCart(i.skuId)">
                     <template #reference>
                       <a href="javascript:;">删除</a>
                     </template>

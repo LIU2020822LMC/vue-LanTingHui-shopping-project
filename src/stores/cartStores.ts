@@ -1,5 +1,6 @@
+import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 
 // 定义购物车商品的类型
 export interface CartItem {
@@ -37,12 +38,27 @@ export const useCartStore = defineStore(
 
     //删除购物车
     const delCart = (skuId: string) => {
-      //思路：
-      //1.找到要删除项的下标值 - splice
-      //2.使用数组的过滤方法 - filter
-      const idx = cartList.value.findIndex((item) => skuId === item.skuId);
-      //该语句的作用是从 cartList.value 数组中位于 idx 索引处开始删除 1 个元素。
-      cartList.value.splice(idx, 1);
+      try {
+        //思路：
+        //1.找到要删除项的下标值 - splice
+        //2.使用数组的过滤方法 - filter
+        const idx = cartList.value.findIndex((item) => skuId === item.skuId);
+        // 判断是否找到要删除的商品
+        //在 JavaScript/TypeScript 中，
+        // findIndex() 方法有两种返回值： 1. 找到元素时：返回该元素在数组中的索引位置（0 或正整数） 2. 没找到元素时：返回 -1
+        //如果idx > -1 为 true：说明找到了元素（因为任何大于-1的数都表示有效的数组索引）
+        // 如果idx > -1 为 false：说明没找到元素（因为findIndex() 返回了 -1）
+        if (idx > -1) {
+          //从idx索引位置开始删除一个元素
+          cartList.value.splice(idx, 1);
+          ElMessage.success("删除成功");
+        } else {
+          ElMessage.error("商品不存在");
+        }
+      } catch (error) {
+        console.error("删除商品时出错:", error);
+        ElMessage.error("删除失败");
+      }
     };
     // 计算商品总件数
     //reduce 是 JavaScript 数组的一个方法。
@@ -58,13 +74,27 @@ export const useCartStore = defineStore(
     });
 
     //选择框
-    const Elected = (skuId:string,selected:boolean)=>{
-      const item = cartList.value.find((item)=> item.skuId = skuId)
+    const Elected = (skuId: string, selected: boolean) => {
+      const item = cartList.value.find((item) => (item.skuId = skuId));
       if (item) {
         item.selected = selected;
       } else {
         console.warn(`未找到 skuId 为 ${skuId} 的商品`);
       }
+    };
+
+    //是否全选
+    //“every” 一般是 JavaScript 数组的一个方法，用于检测数组的所有元素是否都满足指定条件。
+    const isAll = computed(() => cartList.value.every((item) => item.selected));
+
+    //全选功能
+    const AllSelect = ()=>{
+      if (!isAll.value) {
+        cartList.value.forEach((item) => (item.selected = true));
+      }else{
+        cartList.value.forEach((item) => (item.selected = false));
+      }
+
     }
     return {
       cartList,
@@ -73,6 +103,8 @@ export const useCartStore = defineStore(
       totalCount,
       totalPrice,
       Elected,
+      isAll,
+      AllSelect,
     };
   },
   //
