@@ -32,7 +32,7 @@ interface SkuInfo {
 let skuObj: Partial<SkuInfo> = {}
 //sku规格被操作时
 const skuChange = (sku: SkuInfo) =>{
-  console.log(sku)
+  // console.log(sku)
   skuObj = sku
 }
 

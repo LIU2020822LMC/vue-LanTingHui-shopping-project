@@ -90,3 +90,26 @@ export const deleteCartList = (ids: string[]): Promise<deleteCartListResponse> =
     },
   });
 };
+
+//================================================================================================================
+
+//合并购物车列表物品接口相关配置
+export interface MergeCartItem {
+  skuId: string;
+  selected: boolean;
+  count: number;
+}
+
+export interface MergeCartResponse {
+  code: string;
+  msg: string;
+  result: null;
+}
+
+export const mergeCartAPI = (data: MergeCartItem[]): Promise<MergeCartResponse> => {
+  return request({
+    url: "/member/cart/merge",
+    method: "POST",
+    data
+  });
+}
