@@ -8,7 +8,7 @@
         <li class="home">
           <RouterLink to="/">首页</RouterLink>
         </li>
-        <li class="home" v-for="item in  getCategory.categoryList" :key="item.id">
+        <li class="home" v-for="item in getCategory.categoryList" :key="item.id">
           <RouterLink active-class="active" :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         </li>
       </ul>
@@ -17,7 +17,7 @@
         <input type="text" placeholder="搜一搜">
       </div>
       <!-- 头部购物车 -->
-      <HeaderCart/>
+      <HeaderCart />
     </div>
   </header>
 </template>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 // 引入路由组件
 import { RouterLink } from 'vue-router';
-import { useCategoryStore } from '@/stores/category'
+import { useCategoryStore } from '@/stores/categoryStore'
 import HeaderCart from './HeaderCart.vue';
 
 const getCategory = useCategoryStore()

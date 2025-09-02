@@ -2,13 +2,14 @@
   <nav class="app-topnav">
     <div class="container">
       <ul>
+        <li style="position: absolute; left: 0; margin: 0;"><a href="javascript:history.back();">返回</a></li>
         <!-- 多模板渲染，区分登陆状态和非登录状态（用是否有token来区分） -->
         <template v-if="userStore.userInfo?.token">
           <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{ userStore.userInfo.nickname }}</a></li>
           <li>
             <el-popconfirm title="确认退出吗?" @confirm="confirm" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
-                <a href="javascript:;" >退出登录</a>
+                <a href="javascript:;">退出登录</a>
               </template>
             </el-popconfirm>
           </li>
@@ -26,12 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from "@/stores/userStore"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
 const userStore = useUserStore()
-const confirm = () =>{
+const confirm = () => {
   //1.退出登录清楚用户token
   userStore.clearUserInfo()
   //2.退出到登录页面
@@ -41,7 +42,7 @@ const confirm = () =>{
 
 <style scoped lang="scss">
 .app-topnav {
-  background:#112d4e;
+  background: #112d4e;
 
   ul {
     display: flex;

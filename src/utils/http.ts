@@ -1,7 +1,7 @@
 //axios基础的封装
 import axios from "axios";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore";
 import router from "@/router";
 
 const request = axios.create({
@@ -58,7 +58,7 @@ request.interceptors.response.use(
       const userStore = useUserStore();
       userStore.clearUserInfo();
       //2.跳转到登录页
-      router.push('/login');
+      router.push("/login");
     }
     return Promise.reject(e);
   }

@@ -71,3 +71,22 @@ export const findNewcartListAPI = (): Promise<findNewcartListAPIresponse> => {
     url: "/member/cart",
   });
 };
+
+//================================================================================================================
+//删除购物车列表物品接口相关配置
+
+export interface deleteCartListResponse{
+  code:string,
+  msg:string,
+  result:boolean
+}
+
+export const deleteCartList = (ids: string[]): Promise<deleteCartListResponse> => {
+  return request({
+    url: "/member/cart",
+    method: "DELETE",
+    data: {
+      ids,
+    },
+  });
+};

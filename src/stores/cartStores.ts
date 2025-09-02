@@ -1,8 +1,8 @@
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import {useUserStore} from "./user"
-import {findNewcartListAPI,insertCart} from "@/apis/cart"
+import { useUserStore } from "./userStore";
+import { findNewcartListAPI, insertCart, deleteCartList } from "@/apis/cart";
 
 // 定义购物车商品的类型
 export interface CartItem {
@@ -17,22 +17,22 @@ export interface CartItem {
   selected: boolean;
 }
 
+const userStore = useUserStore();
+const isLogin = computed(() => userStore.userInfo?.token);
+
 export const useCartStore = defineStore(
   "cart",
   () => {
-    const userStore = useUserStore()
     //1.  定义state - cartList
     const cartList = ref<CartItem[]>([]);
     //2. 定义action - addCart
-    const addCart =async (goods: CartItem) => {
-      const isLogin = computed(()=>userStore.userInfo?.token)
+    const addCart = async (goods: CartItem) => {
       //已登录时添加购物车操作
       if (isLogin.value) {
-        const {skuId,count}  = goods
-        await insertCart(skuId,count)
-        const res = await findNewcartListAPI()
-        cartList.value = res.result
-      }else{
+        const { skuId, count } = goods;
+        await insertCart(skuId, count);
+        updateNewList();
+      } else {
         //未登录时添加购物车的操作
         //添加购物车操作
         //已添加过 - count + 1
@@ -47,32 +47,44 @@ export const useCartStore = defineStore(
           cartList.value.push(goods);
         }
       }
-
     };
 
     //删除购物车
-    const delCart = (skuId: string) => {
+    const delCart = async (skuId: string) => {
       try {
-        //思路：
-        //1.找到要删除项的下标值 - splice
-        //2.使用数组的过滤方法 - filter
-        const idx = cartList.value.findIndex((item) => skuId === item.skuId);
-        // 判断是否找到要删除的商品
-        //在 JavaScript/TypeScript 中，
-        // findIndex() 方法有两种返回值： 1. 找到元素时：返回该元素在数组中的索引位置（0 或正整数） 2. 没找到元素时：返回 -1
-        //如果idx > -1 为 true：说明找到了元素（因为任何大于-1的数都表示有效的数组索引）
-        // 如果idx > -1 为 false：说明没找到元素（因为findIndex() 返回了 -1）
-        if (idx > -1) {
-          //从idx索引位置开始删除一个元素
-          cartList.value.splice(idx, 1);
+        if (isLogin.value) {
+          //调用接口实现接口购物车中的删除功能
+          await deleteCartList([skuId]);
+          updateNewList();
           ElMessage.success("删除成功");
         } else {
-          ElMessage.error("商品不存在");
+          //思路：
+          //1.找到要删除项的下标值 - splice
+          //2.使用数组的过滤方法 - filter
+          const idx = cartList.value.findIndex((item) => skuId === item.skuId);
+          // 判断是否找到要删除的商品
+          //在 JavaScript/TypeScript 中，
+          // findIndex() 方法有两种返回值： 1. 找到元素时：返回该元素在数组中的索引位置（0 或正整数） 2. 没找到元素时：返回 -1
+          //如果idx > -1 为 true：说明找到了元素（因为任何大于-1的数都表示有效的数组索引）
+          // 如果idx > -1 为 false：说明没找到元素（因为findIndex() 返回了 -1）
+          if (idx > -1) {
+            //从idx索引位置开始删除一个元素
+            cartList.value.splice(idx, 1);
+            ElMessage.success("删除成功");
+          } else {
+            ElMessage.error("商品不存在");
+          }
         }
       } catch (error) {
         console.error("删除商品时出错:", error);
         ElMessage.error("删除失败");
       }
+    };
+
+    //获取最新购物车列表的action
+    const updateNewList = async () => {
+      const res = await findNewcartListAPI();
+      cartList.value = res.result;
     };
 
     // 计算商品总件数
@@ -136,6 +148,7 @@ export const useCartStore = defineStore(
       AllSelect,
       selectedCount,
       selectedPrice,
+      updateNewList,
     };
   },
   //

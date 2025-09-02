@@ -7,7 +7,7 @@ import { useScroll } from '@vueuse/core'
 const { y } = useScroll(window)
 import { RouterLink } from 'vue-router';
 
-import { useCategoryStore } from '@/stores/category'
+import { useCategoryStore } from '@/stores/categoryStore'
 
 const getCategory = useCategoryStore()
 
@@ -15,7 +15,7 @@ const getCategory = useCategoryStore()
 </script>
 
 <template>
-  <div class="app-header-sticky " :class="{show: y > 78 }">
+  <div class="app-header-sticky " :class="{ show: y > 78 }">
     <div class="container">
       <RouterLink class="logo" to="/" />
       <!-- 导航区域 -->
@@ -58,9 +58,12 @@ const getCategory = useCategoryStore()
 
   // 状态二：移除平移 + 完全不透明
   &.show {
-    transition: all 0.4s linear;/* 动画过渡：所有变化在0.4秒内完成 */
-    transform: none;/* 取消移动（回到原来的位置） */
-    opacity: 1;/* 完全不透明（可见） */
+    transition: all 0.4s linear;
+    /* 动画过渡：所有变化在0.4秒内完成 */
+    transform: none;
+    /* 取消移动（回到原来的位置） */
+    opacity: 1;
+    /* 完全不透明（可见） */
   }
 
   .container {

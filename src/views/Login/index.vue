@@ -1,17 +1,17 @@
 <script setup lang="ts">
 //表单验证（账号名+密码）
-import {ref} from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { ElMessage } from 'element-plus'
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from "@/stores/userStore"
 
 const router = useRouter()
 const userStore = useUserStore()
 //1.准备表单对象
 const form = ref({
-  account:'',
-  password:'',
-  agree:false
+  account: '',
+  password: '',
+  agree: false
 })
 
 //2.准备规则对象
@@ -21,11 +21,11 @@ const rules: FormRules = {
   account: [
     { required: true, message: '用户名不能为空', trigger: 'blur' },
   ],
-  password:[
+  password: [
     { required: true, message: '密码不能为空', trigger: 'blur' },
     { min: 4, max: 16, message: '密码长度为4-16个字符（不分大小写）', trigger: 'blur' },
   ],
-  agree:[
+  agree: [
     {
       validator: (rules, value, callback) => {
         if (!value) {
@@ -44,15 +44,15 @@ import type { FormInstance } from 'element-plus'
 //表明里面专门放FormInstance这种表单控制器
 const formRef = ref<FormInstance>()
 const doLogin = () => {
-  const {account,password}  = form.value
+  const { account, password } = form.value
   //调用实例方法
   formRef.value?.validate(async (valid) => {
     //valid:所有表单都通过校验 才为true
     console.log(valid)
-    if (valid){
+    if (valid) {
       await userStore.getUserInfo({ account, password })
       const res = userStore.loginInfo
-      if(res.code === "1"){
+      if (res.code === "1") {
         // 提示用户
         ElMessage({ type: 'primary', message: '登录成功', showClose: true, })
         //登录后重定向，避免用户回到登录页

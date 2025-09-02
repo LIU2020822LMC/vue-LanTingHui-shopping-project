@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCategoryStore } from '@/stores/category'
+import { useCategoryStore } from '@/stores/categoryStore'
 
 const getCategory = useCategoryStore()
 </script>
@@ -9,7 +9,7 @@ const getCategory = useCategoryStore()
     <ul class="menu">
       <li v-for="item in getCategory.categoryList" :key="item.id">
         <RouterLink to="/">{{ item.name }}</RouterLink>
-        <RouterLink v-for="i in item.children.slice(0,2)" :key="i.id" to="/">{{ i.name }}</RouterLink>
+        <RouterLink v-for="i in item.children.slice(0, 2)" :key="i.id" to="/">{{ i.name }}</RouterLink>
         <!-- 弹层layer位置 -->
         <div class="layer">
           <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
@@ -142,6 +142,7 @@ const getCategory = useCategoryStore()
       // 关键样式  当鼠标悬停在这个li上时的layer盒子变成block
       &:hover {
         background: $LTHColor;
+
         .layer {
           display: block;
         }
