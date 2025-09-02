@@ -17,12 +17,13 @@ export interface CartItem {
   selected: boolean;
 }
 
-const userStore = useUserStore();
-const isLogin = computed(() => userStore.userInfo?.token);
+
 
 export const useCartStore = defineStore(
   "cart",
   () => {
+    const userStore = useUserStore();
+    const isLogin = computed(() => userStore.userInfo?.token);
     //1.  定义state - cartList
     const cartList = ref<CartItem[]>([]);
     //2. 定义action - addCart
@@ -130,6 +131,11 @@ export const useCartStore = defineStore(
         .reduce((sum, item) => sum + item.count, 0)
     );
 
+    //清楚购物车列表的数据
+    const clearCartListInfo = ()=>{
+      cartList.value = []
+    }
+
     // 购物车列表已选商品总价
     const selectedPrice = computed(() =>
       cartList.value
@@ -149,6 +155,7 @@ export const useCartStore = defineStore(
       selectedCount,
       selectedPrice,
       updateNewList,
+      clearCartListInfo,
     };
   },
   //

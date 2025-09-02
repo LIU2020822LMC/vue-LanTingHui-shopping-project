@@ -2,11 +2,13 @@
 import { defineStore } from "pinia";
 import {ref} from "vue"
 import { loginAPI, type loginResult } from "@/apis/user";
+import { useCartStore } from "./cartStores.ts"
 
 
 export const useUserStore = defineStore(
   "user",
   () => {
+    const cartStore = useCartStore();
     //1.定义管理用户数据的state
     const userInfo = ref<loginResult | null>(null);
     const loginInfo = ref();
@@ -16,11 +18,13 @@ export const useUserStore = defineStore(
       loginInfo.value = res;
       userInfo.value = res.result;
     };
+
     const clearUserInfo = () =>{
       loginInfo.value = null
       userInfo.value = null
       // 手动清除localStorage中的持久化数据
       localStorage.removeItem('user')
+      cartStore.clearCartListInfo()
     }
     // 3.以对象的格式把state和action return
     return {
