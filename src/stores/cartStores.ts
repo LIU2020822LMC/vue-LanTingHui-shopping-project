@@ -1,6 +1,8 @@
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import {useUserStore} from "./user"
+import {findNewcartListAPI,insertCart} from "@/apis/cart"
 
 // 定义购物车商品的类型
 export interface CartItem {
@@ -18,22 +20,34 @@ export interface CartItem {
 export const useCartStore = defineStore(
   "cart",
   () => {
+    const userStore = useUserStore()
     //1.  定义state - cartList
     const cartList = ref<CartItem[]>([]);
     //2. 定义action - addCart
-    const addCart = (goods: CartItem) => {
-      //添加购物车操作
-      //已添加过 - count + 1
-      //没有添加过 - 直接push
-      // 思路：通过匹配传递过来的商品对象中的skuId能不能在cartList中找到，找到了就是添加过
-      const item = cartList.value.find((item: CartItem) => item.skuId === goods.skuId);
-      if (item) {
-        //如果符合条件的item存在
-        item.count++;
-      } else {
-        //如果不存在
-        cartList.value.push(goods);
+    const addCart =async (goods: CartItem) => {
+      const isLogin = computed(()=>userStore.userInfo?.token)
+      //已登录时添加购物车操作
+      if (isLogin.value) {
+        const {skuId,count}  = goods
+        await insertCart(skuId,count)
+        const res = await findNewcartListAPI()
+        cartList.value = res.result
+      }else{
+        //未登录时添加购物车的操作
+        //添加购物车操作
+        //已添加过 - count + 1
+        //没有添加过 - 直接push
+        // 思路：通过匹配传递过来的商品对象中的skuId能不能在cartList中找到，找到了就是添加过
+        const item = cartList.value.find((item: CartItem) => item.skuId === goods.skuId);
+        if (item) {
+          //如果符合条件的item存在
+          item.count++;
+        } else {
+          //如果不存在
+          cartList.value.push(goods);
+        }
       }
+
     };
 
     //删除购物车
@@ -60,6 +74,7 @@ export const useCartStore = defineStore(
         ElMessage.error("删除失败");
       }
     };
+
     // 计算商品总件数
     //reduce 是 JavaScript 数组的一个方法。
     // 它对数组中的每个元素按序执行一个 “累加器” 函数，将数组元素组合为一个单一的值
