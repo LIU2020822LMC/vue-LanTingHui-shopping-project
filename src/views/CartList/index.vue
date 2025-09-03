@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { type CartItem, useCartStore } from "@/stores/cartStores"
+
 const CartStore = useCartStore()
 
 const Eelected = (i: CartItem,selected:boolean) =>{
   console.log(i,selected);
   CartStore.Elected(i.skuId,selected)
 }
+
 </script>
 
 <template>
@@ -83,7 +85,7 @@ const Eelected = (i: CartItem,selected:boolean) =>{
           <span class="red">¥ {{ CartStore.selectedPrice }} </span>
         </div>
         <div class="total">
-          <el-button size="large" type="primary">下单结算</el-button>
+          <el-button size="large" type="primary" @click="$router.push('/checkout')">下单结算</el-button>
         </div>
       </div>
     </div>
