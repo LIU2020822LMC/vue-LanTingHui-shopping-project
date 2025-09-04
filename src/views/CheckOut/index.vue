@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { getCheckoutInfo, type CheckoutInfoItem, type userAddressesItem } from "@/apis/checkout"
+import { getCheckoutInfo, type CheckoutInfoItem, type userAddressesItem, createOrderAPI } from "@/apis/checkout"
 import { onMounted, ref } from "vue"
+import { ElNotification } from 'element-plus'
+import { useRouter } from "vue-router"
+import {useCartStore} from "@/stores/cartStores"
 
 const checkInfo = ref<CheckoutInfoItem | null>() // 订单对象
 const curAddress = ref<userAddressesItem | null>() //地址对象（默认地址）
 const showDialog = ref(false)
+const router = useRouter()
+const CartStore = useCartStore()
 
 const getCheckout = async () => {
   const res = await getCheckoutInfo()
@@ -25,6 +30,43 @@ const confirm = () =>{
   curAddress.value = activeAddress.value
   showDialog.value = false
   activeAddress.value = null
+}
+
+//添加地址
+const addFlag =() =>{
+  ElNotification({
+    title: '添加地址',
+    message: '抱歉。此功能暂未实现',
+    type: 'primary',
+  })
+}
+
+//创建订单
+const createOrder = async () =>{
+  //这行代码起到了**类型守护（TypeGuard）** 的作用，它告诉TypeScript："如果
+  //checkInfo.value 存在且有 goods 属性且 goods数组不为空，才继续执行后面的代码"
+    if (!checkInfo.value?.goods?.length) return
+    const res = await createOrderAPI({
+      deliveryTimeType:1,
+      payType:1,
+      payChannel:1,
+      buyerMessage:'',
+      goods: [{
+        skuId: checkInfo.value.goods[0].skuId,
+        count: checkInfo.value.goods[0].count
+      }],
+      addressId: curAddress.value?.id || ''
+    })
+    const orderId = res.result.id
+  router.push({
+    path:'/pay',
+    query:{
+      id:orderId
+    }
+  })
+  //更新购物车
+  CartStore.clearCartListInfo()
+  CartStore.updateNewList()
 }
 
 onMounted(() => {
@@ -51,7 +93,7 @@ onMounted(() => {
             </div>
             <div class="action">
               <el-button size="large" @click="showDialog = true">切换地址</el-button>
-              <el-button size="large" @click="addFlag = true">添加地址</el-button>
+              <el-button size="large" @click="addFlag">添加地址</el-button>
             </div>
           </div>
         </div>
@@ -107,7 +149,7 @@ onMounted(() => {
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <!-- <dd>{{ checkInfo.summary?.goodsCount }}件</dd> -->
+              <dd>{{ checkInfo?.summary?.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
@@ -125,7 +167,7 @@ onMounted(() => {
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large">提交订单</el-button>
+          <el-button type="primary" size="large" @click="createOrder">提交订单</el-button>
         </div>
       </div>
     </div>

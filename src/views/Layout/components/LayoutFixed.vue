@@ -18,6 +18,7 @@ const getCategory = useCategoryStore()
   <div class="app-header-sticky " :class="{ show: y > 78 }">
     <div class="container">
       <RouterLink class="logo" to="/" />
+      <el-button style="border: none;margin-left: 40px;" @click="$router.back()">返回</el-button>
       <!-- 导航区域 -->
       <ul class="app-header-nav ">
         <li class="home">
@@ -34,6 +35,7 @@ const getCategory = useCategoryStore()
       </div>
     </div>
   </div>
+
 </template>
 
 
@@ -74,6 +76,7 @@ const getCategory = useCategoryStore()
   .logo {
     width: 200px;
     height: 80px;
+    margin-top: 10px;
     background: url("@/assets/images/logo.png") no-repeat right 2px;
     background-size: 160px auto;
   }

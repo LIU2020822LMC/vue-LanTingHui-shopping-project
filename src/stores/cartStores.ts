@@ -131,7 +131,7 @@ export const useCartStore = defineStore(
         .reduce((sum, item) => sum + item.count, 0)
     );
 
-    //清楚购物车列表的数据
+    //清购物车列表的数据
     const clearCartListInfo = ()=>{
       cartList.value = []
     }
