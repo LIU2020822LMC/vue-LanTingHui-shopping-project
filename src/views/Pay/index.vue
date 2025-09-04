@@ -1,5 +1,19 @@
 <script setup lang="ts">
-const payInfo = {}
+import { getOrderAPI, type getOrderResult } from "@/apis/pay"
+import { onMounted, ref } from "vue";
+import {useRoute } from "vue-router";
+
+const payInfo = ref < getOrderResult | null>(null)
+const route = useRoute()
+const getOrder =   async() =>{
+  const res = await getOrderAPI(route.query.id as string)
+  payInfo.value = res.result
+}
+
+onMounted(()=>{
+  getOrder()
+})
+
 </script>
 
 
@@ -15,7 +29,7 @@ const payInfo = {}
 </div>
 <div class="amount">
 <span>应付总额：</span>
-<!-- <span>¥{{ payInfo.payMoney?.toFixed(2) }}</span> -->
+<span>¥{{ payInfo?.payMoney?.toFixed(2) }}</span>
 </div>
 </div>
 <!-- 付款方式 -->
@@ -24,7 +38,7 @@ const payInfo = {}
 <div class="item">
 <p>支付平台</p>
 <a class="btn wx" href="javascript:;"></a>
-<a class="btn alipay" :href="payUrl"></a>
+<!-- <a class="btn alipay" :href="payUrl"></a> -->
 </div>
 <div class="item">
 <p>支付方式</p>
