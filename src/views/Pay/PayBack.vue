@@ -3,11 +3,14 @@ import { getOrderAPI, type getOrderResult } from "@/apis/pay"
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 
+
 const payInfo = ref<getOrderResult | null>(null)
+
 const route = useRoute()
 const getOrder = async () =>{
   const res = await getOrderAPI(route.query.id as string)
   payInfo.value = res.result
+
 }
 
 onMounted(()=>{
@@ -29,8 +32,8 @@ onMounted(()=>{
         <p>支付方式：<span>支付宝</span></p>
         <p>支付金额：<span>¥{{ payInfo?.payMoney }}</span></p>
         <div class="btn">
-          <el-button type="primary" style="margin-right:20px">查看订单</el-button>
-          <el-button>进入首页</el-button>
+          <el-button type="primary" style="margin-right:20px" @click="$router.push('/cartList')">查看订单</el-button>
+          <el-button @click="$router.push('/')">进入首页</el-button>
         </div>
         <p class="alert">
           <span class="iconfont icon-tip"></span>
