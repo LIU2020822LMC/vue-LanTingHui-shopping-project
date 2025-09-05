@@ -14,6 +14,12 @@ onMounted(()=>{
   getOrder()
 })
 
+// 跳转支付地址
+//携带订单id以及回调地址跳转到支付地址（get）
+const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const backURL = 'http://127.0.0.1:5173/paycallback'
+const redirectUrl = encodeURIComponent(backURL)
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
 </script>
 
 
@@ -38,7 +44,7 @@ onMounted(()=>{
 <div class="item">
 <p>支付平台</p>
 <a class="btn wx" href="javascript:;"></a>
-<!-- <a class="btn alipay" :href="payUrl"></a> -->
+<a class="btn alipay" :href="payUrl"></a>
 </div>
 <div class="item">
 <p>支付方式</p>
