@@ -31,3 +31,29 @@ export const loginAPI = ({account,password}:{account:string,password:string}):Pr
     }
   })
 }
+
+//猜你喜欢的接口相关配置
+
+export interface getLikeListResult{
+  id:string,
+  name:string,
+  desc:string,
+  price:string,
+  picture:string,
+  orderNum:number;
+}
+
+export interface getLikeListResponse {
+  code: string;
+  msg: string;
+  result: getLikeListResult[];
+}
+
+export const getLikeListAPI = ({ limit = 4 }): Promise<getLikeListResponse> => {
+  return request({
+    url: "/goods/relevant",
+    params: {
+      limit,
+    },
+  });
+};
