@@ -30,7 +30,7 @@ export interface getUserOrderResultItem{
   id:string,
   createTime:string,
   payType:number,
-  orderstate:number,
+  orderState:number,
   payLatesTime:string,
   postFee:number,
   payMoney:number,
