@@ -2,16 +2,18 @@
 import { getUserOrder, type getUserOrderResultItem } from "@/apis/order.ts"
 import { onMounted, ref } from "vue"
 
+const total = ref(0)
 const params = ref({
   orderState : 0,
   page: 1,
-  pageSize: 2
+  pageSize: 3
 })
 // 订单列表
 const orderList = ref<getUserOrderResultItem[]>([])
 const userOrder =async () =>{
   const res = await getUserOrder(params.value)
   orderList.value = res.result.items
+  total.value = res.result.counts
 }
 
 onMounted(()=>userOrder())
@@ -29,6 +31,12 @@ const tabTypes = [
 //tab切换
 const tabChange = (type:number) =>{
   params.value.orderState = type
+  userOrder()
+}
+
+//页数切换
+const handleCurrentChange = (page:number) =>{
+  params.value.page = page
   userOrder()
 }
 </script>
@@ -76,7 +84,7 @@ const tabChange = (type:number) =>{
                 </ul>
               </div>
               <div class="column state">
-                <p>{{ order.orderState  }}</p>
+                <p>{{ order.orderState }}</p>
                 <p v-if="order.orderState  === 3">
                   <a href="javascript:;" class="green">查看物流</a>
                 </p>
@@ -112,7 +120,8 @@ const tabChange = (type:number) =>{
           </div>
           <!-- 分页 -->
           <div class="pagination-container">
-            <el-pagination background layout="prev, pager, next" />
+            <el-pagination :total="total" :page-size="params.pageSize" @current-change="handleCurrentChange" background
+              layout="prev, pager, next" />
           </div>
         </div>
       </div>
