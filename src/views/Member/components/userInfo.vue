@@ -54,7 +54,7 @@ const userStore = useUserStore()
 <style scoped lang="scss">
 .home-overview {
   height: 132px;
-  background: url(@/assets/images/center-bg.png) no-repeat center / cover;
+  background: url(@/assets/images/123.jpg) no-repeat center / cover;
   display: flex;
 
   .user-meta {

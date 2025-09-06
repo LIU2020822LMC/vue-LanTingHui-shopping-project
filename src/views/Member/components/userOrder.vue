@@ -1,4 +1,20 @@
 <script setup lang="ts">
+import { getUserOrder, type getUserOrderResultItem } from "@/apis/order.ts"
+import { onMounted, ref } from "vue"
+
+const params = ref({
+  orderstate: 0,
+  page: 1,
+  pageSize: 2
+})
+// 订单列表
+const orderList = ref<getUserOrderResultItem[]>([])
+const userOrder =async () =>{
+  const res = await getUserOrder(params.value)
+  orderList.value = res.result.items
+}
+
+onMounted(()=>userOrder())
 // tab列表
 const tabTypes = [
   { name: "all", label: "全部订单" },
@@ -9,8 +25,7 @@ const tabTypes = [
   { name: "complete", label: "已完成" },
   { name: "cancel", label: "已取消" }
 ]
-// 订单列表
-const orderList = []
+
 
 </script>
 
@@ -31,7 +46,7 @@ const orderList = []
               <span>下单时间：{{ order.createTime }}</span>
               <span>订单编号：{{ order.id }}</span>
               <!-- 未付款，倒计时时间还有 -->
-              <span class="down-time" v-if="order.orderState === 1">
+              <span class="down-time" v-if="order.orderstate === 1">
                 <i class="iconfont icon-down-time"></i>
                 <b>付款截止: {{ order.countdown }}</b>
               </span>
@@ -57,14 +72,14 @@ const orderList = []
                 </ul>
               </div>
               <div class="column state">
-                <p>{{ order.orderState }}</p>
-                <p v-if="order.orderState === 3">
+                <p>{{ order.orderstate }}</p>
+                <p v-if="order.orderstate === 3">
                   <a href="javascript:;" class="green">查看物流</a>
                 </p>
-                <p v-if="order.orderState === 4">
+                <p v-if="order.orderstate === 4">
                   <a href="javascript:;" class="green">评价商品</a>
                 </p>
-                <p v-if="order.orderState === 5">
+                <p v-if="order.orderstate === 5">
                   <a href="javascript:;" class="green">查看评价</a>
                 </p>
               </div>
@@ -74,20 +89,20 @@ const orderList = []
                 <p>在线支付</p>
               </div>
               <div class="column action">
-                <el-button v-if="order.orderState === 1" type="primary" size="small">
+                <el-button v-if="order.orderstate === 1" type="primary" size="small">
                   立即付款
                 </el-button>
-                <el-button v-if="order.orderState === 3" type="primary" size="small">
+                <el-button v-if="order.orderstate === 3" type="primary" size="small">
                   确认收货
                 </el-button>
                 <p><a href="javascript:;">查看详情</a></p>
-                <p v-if="[2, 3, 4, 5].includes(order.orderState)">
+                <p v-if="[2, 3, 4, 5].includes(order.orderstate)">
                   <a href="javascript:;">再次购买</a>
                 </p>
-                <p v-if="[4, 5].includes(order.orderState)">
+                <p v-if="[4, 5].includes(order.orderstate)">
                   <a href="javascript:;">申请售后</a>
                 </p>
-                <p v-if="order.orderState === 1"><a href="javascript:;">取消订单</a></p>
+                <p v-if="order.orderstate === 1"><a href="javascript:;">取消订单</a></p>
               </div>
             </div>
           </div>

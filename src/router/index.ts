@@ -44,6 +44,7 @@ const router = createRouter({
         {
           path: "member",
           component: () => import("@/views/Member/index.vue"),
+          redirect:'/member/user',
           children: [
             {
               path: "user",

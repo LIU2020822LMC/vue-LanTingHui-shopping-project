@@ -18,7 +18,7 @@ const getCategory = useCategoryStore()
   <div class="app-header-sticky " :class="{ show: y > 78 }">
     <div class="container">
       <RouterLink class="logo" to="/" />
-      <el-button style="border: none;margin-left: 40px;" @click="$router.back()">返回</el-button>
+      <el-button style="border: none;margin-left: 40px;font-size: 15.5px;" @click="$router.back()">返回</el-button>
       <!-- 导航区域 -->
       <ul class="app-header-nav ">
         <li class="home">
