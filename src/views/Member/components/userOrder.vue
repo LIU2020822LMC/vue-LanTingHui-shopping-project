@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { getUserOrder, type getUserOrderResultItem } from "@/apis/order.ts"
 import { onMounted, ref } from "vue"
+import { useCountDown } from "@/components/useCountDown"
 
 const total = ref(0)
+const { start, formatTime } = useCountDown()
 const params = ref({
   orderState : 0,
   page: 1,
@@ -13,6 +15,11 @@ const orderList = ref<getUserOrderResultItem[]>([])
 const userOrder =async () =>{
   const res = await getUserOrder(params.value)
   orderList.value = res.result.items
+  // 找到需要倒计时的订单（通常是待付款状态的订单）
+  const orderWithCountdown = orderList.value.find(order => order.countdown > 0)
+  if (orderWithCountdown) {
+    start(orderWithCountdown.countdown)
+  }
   total.value = res.result.counts
 }
 
@@ -39,6 +46,28 @@ const handleCurrentChange = (page:number) =>{
   params.value.page = page
   userOrder()
 }
+
+// 创建格式化函数
+const fomartPayState = (payState: number) => {
+  // 添加索引签名：[key: number]: string
+  const stateMap: {
+    1: string;
+    2: string;
+    3: string;
+    4: string;
+    5: string;
+    6: string;
+    [key: number]: string; // 允许用任意 number 类型索引
+  } = {
+    1: '待付款',
+    2: '待发货',
+    3: '待收货',
+    4: '待评价',
+    5: '已完成',
+    6: '已取消'
+  };
+  return stateMap[payState];
+};
 </script>
 
 <template>
@@ -60,7 +89,7 @@ const handleCurrentChange = (page:number) =>{
               <!-- 未付款，倒计时时间还有 -->
               <span class="down-time" v-if="order.orderState  === 1">
                 <i class="iconfont icon-countdown_timer"></i>
-                <b>付款截止: {{ order.countdown }}</b>
+                <b>付款截止: {{ formatTime }}</b>
               </span>
             </div>
             <div class="body">
@@ -84,7 +113,7 @@ const handleCurrentChange = (page:number) =>{
                 </ul>
               </div>
               <div class="column state">
-                <p>{{ order.orderState }}</p>
+                <p>{{ fomartPayState(order.orderState) }}</p>
                 <p v-if="order.orderState  === 3">
                   <a href="javascript:;" class="green">查看物流</a>
                 </p>

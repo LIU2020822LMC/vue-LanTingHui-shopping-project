@@ -174,12 +174,13 @@ const spliter = '★'
 const getPathMap = (skus: Sku[]): PathMap => {
   const pathMap: PathMap = {}
   if (skus && skus.length > 0) {
+
     skus.forEach(sku => {
       // 1. 过滤出有库存有效的sku
       if (sku.inventory) {
-        // 2. 得到sku属性值数组
+        // 2. 得到sku属性值数组。获取匹配的valueName组成的数组
         const specs = sku.specs.map(spec => spec.valueName)
-        // 3. 得到sku属性值数组的子集
+        // 3. 得到sku属性值数组的子集。根据有效的sku使用算法（子集算法）[1,2] => [[1],[2],[1,2]]:getPowerSet会推算出各种组合
         const powerSet = getPowerSet(specs)
         // 4. 设置给路径字典对象
         powerSet.forEach(set => {
@@ -189,6 +190,8 @@ const getPathMap = (skus: Sku[]): PathMap => {
             pathMap[key] = []
           }
           pathMap[key].push(String(sku.id))
+          // console.log(pathMap);
+
         })
       }
     })
@@ -201,6 +204,7 @@ function initDisabledStatus (specs: Spec[], pathMap: PathMap): void {
   if (specs && specs.length > 0) {
     specs.forEach(spec => {
       spec.values.forEach(val => {
+        //如果没有这个组合的存在的话，就设置disabled为true
         // 设置禁用状态
         val.disabled = !pathMap[val.name]
       })
@@ -219,7 +223,9 @@ const getSelectedArr = (specs: Spec[]): (string | undefined)[] => {
       selectedArr[index] = undefined
     }
   })
+  console.log(selectedArr);
   return selectedArr
+
 }
 
 // 更新按钮的禁用状态
@@ -266,12 +272,16 @@ export default {
       initDisabledStatus(props.goods.specs, pathMap)
     })
 
+    //后端接口返回的 item.values 中默认没有 selected 属性，但这并不影响代码运行，因为在 Vue 中可以动态为对象添加属性
     const clickSpecs = (item: Spec, val: SpecValue) => {
       if (val.disabled) return false
       // 选中与取消选中逻辑
       if (val.selected) {
         val.selected = false
       } else {
+        //先给当前规格组（item）的所有 val 统一添加 selected: false 属性。
+        //再给当前点击的 val 设置 selected: true。
+        //经过第一次操作后，所有规格选项都会被添加上 selected 属性，后续点击就可以基于这个属性进行状态切换了。
         item.values.forEach(bv => { bv.selected = false })
         val.selected = true
       }
@@ -293,7 +303,7 @@ export default {
             price: sku.price,
             oldPrice: sku.oldPrice,
             inventory: sku.inventory,
-            specsText: sku.specs.reduce((p, n) => `${p} ${n.name}：${n.valueName}`, '').trim()
+            specsText: sku.specs.reduce((p, n) => `${p} ${n.name}:${n.valueName}`, '').trim()
           })
         }
       } else {
