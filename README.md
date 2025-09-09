@@ -52,7 +52,8 @@ heima293	12056258293	hm#qd@23!
 
 整个项目拆分成十个模块：购物车列表、商品分类、订单详情、商品详情、首页、整体布局、用户登录、会员中心、支付管理、热门商品信息
 
-![alt text](image.png)
+<img width="352" height="323" alt="image" src="https://github.com/user-attachments/assets/a0a42f90-e2a4-434f-b7df-6574ce65d731" />
+
 
 ##### 2、长页面吸顶交互的实现
 
@@ -62,36 +63,43 @@ heima293	12056258293	hm#qd@23!
 
 未超过设定的距离顶部的值时显示的头部页面是这样子的：
 
-![alt text](image-1.png)
+<img width="1852" height="925" alt="image" src="https://github.com/user-attachments/assets/afd2be70-103b-49d5-9130-c2a1f8b0936a" />
+
 
 超过了之后显示是这样子的：
 
-![alt text](image-2.png)
+<img width="1852" height="925" alt="image" src="https://github.com/user-attachments/assets/f1e30b7f-d63f-4144-af4f-1f973c1d0912" />
+
 
 **实现过程：**
 
 准备LayoutFixed组件与LayoutHeader组件，这两个组件的模板差不多是一样的，不同的是，LayoutHeader组件是一直显示在顶部的，而LayoutFixed组件则在距离顶部的滚动距离大于设定某个值的时候才会显示出来，并且不会随着滑下去而被其他覆盖掉，就超过设置的距离之后就一直显示在顶部
 
-![alt text](image-3.png)
+<img width="350" height="220" alt="image" src="https://github.com/user-attachments/assets/e03e8d55-13a0-4d53-8e68-335f06c01267" />
+
 
 LayoutFixed组件实现页面吸顶交互详情解释：
 
 首先需要vueuse中的useScroll函数来获取你在页面距离顶部的滚动距离y
 
-![alt text](image-4.png)
+<img width="1212" height="164" alt="image" src="https://github.com/user-attachments/assets/a57e98b7-39ed-402b-a79a-b7f4d2eab634" />
+
 
 当y>78px的时候，添加show类名show类名里面有个opacity的属性
 
-![alt text](image-5.png)
+<img width="928" height="224" alt="image" src="https://github.com/user-attachments/assets/d71fc53d-7b47-4577-ae2b-e23e3bdbdc9a" />
+
 
 show类名里面有个opacity的属性，当这个属性变为1的时候，让这个组件显示出来
 
-![alt text](image-6.png)
+<img width="910" height="268" alt="image" src="https://github.com/user-attachments/assets/a88d1b61-1c54-4ba9-904c-56036a969300" />
 
-![alt text](image-7.png)
+<img width="1131" height="420" alt="image" src="https://github.com/user-attachments/assets/e3e39d2b-b821-4797-b8fb-8403f76069d9" />
+
 
 通过设置 “position: fixed;” 来实现，无论用户如何滚动页面，导航栏都一直显示在屏幕的特定位置。这样子就无论你往下滚动多少就一直显示在顶部
 
-![alt text](image-8.png)
+<img width="1156" height="424" alt="image" src="https://github.com/user-attachments/assets/5c3e2d59-32bb-4b3d-a314-cc3f31af9c3f" />
+
 
 ##### 3、自定义图片懒加载指令并封装为插件
