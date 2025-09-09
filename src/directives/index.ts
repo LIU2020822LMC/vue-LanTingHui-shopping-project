@@ -7,7 +7,7 @@ export const ImgLazyPlugin = {
   install(app: App){
     //定义全局指令
     app.directive("img-lazy", {
-      //“binding: DirectiveBinding<string>” 
+      //“binding: DirectiveBinding<string>”
       // 表示 binding 是一个指令绑定，这里的指令绑定类型是针对字符串类型的数据
       mounted(el: HTMLImageElement, binding: DirectiveBinding) {
         //el : 指令绑定的那个元素 img
@@ -38,7 +38,7 @@ export const ImgLazyPlugin = {
             }
           },
           {
-            // 设置 rootMargin，提前50px开始加载图片
+            // 设置 rootMargin，提前80px开始加载图片
             rootMargin: "80px",
           }
         );
