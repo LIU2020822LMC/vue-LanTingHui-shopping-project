@@ -95,3 +95,46 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 <img width="1156" height="424" alt="image" src="https://github.com/user-attachments/assets/5c3e2d59-32bb-4b3d-a314-cc3f31af9c3f" />
 
 ##### 3、自定义图片懒加载指令并封装为插件
+
+**使用原因：** 电商平台项目有大量的商品图片, 同时加载和渲染全部的图片资源会挤占带宽, 首页白屏与加载时间过长,用户体验感不好, 同时还会浪费用户的流量，有些用户并不想全部看完，全部加载会耗费大量流量。所以需要使用到图片懒加载。将懒加载指令封装为插件是为了方便在项目各个组件中的使用。
+
+**实现逻辑：** 
+（1）懒加载：只有当图片出现在视口区域才会发送图片的网络请求，将图片的src替换成接口返回的图片地址。
+
+（2）封装插件：使用app将指令封装成插件，然后再入口文件main.js文件中注册
+
+**实现过程：**
+
+通过useIntersectionObserver函数中isIntersecting属性判断图片是否进入视口区，如果达到标准则会向接口请求图片资源链接将其放在img中的src里
+
+<img width="1751" height="697" alt="image" src="https://github.com/user-attachments/assets/19cc7953-6712-463c-8901-a50d89e05642" />
+
+设置 rootMargin，提前80px开始加载图片
+
+<img width="629" height="136" alt="image" src="https://github.com/user-attachments/assets/1bb7d914-5a3e-429e-8e22-0d50ee492f44" />
+
+将指令注册为插件：在main.ts文件中引入图片懒加载指令所在文件（即@/directives/index），然后通过app实例注册为全局指令，这样子就可以在其他组件使用img-lazy这个指令了
+
+<img width="989" height="586" alt="image" src="https://github.com/user-attachments/assets/45c9f844-7d98-41ec-926b-1eea879eb9a4" />
+
+在组件使用的时候需要写成v-img-lazy这样子的形式
+
+<img width="993" height="128" alt="image" src="https://github.com/user-attachments/assets/90d9af6b-a088-4ccb-9dad-6f6b0f13fb97" />
+
+<img width="822" height="142" alt="image" src="https://github.com/user-attachments/assets/872007af-8f65-4f67-9a02-97b6a6aad856" />
+
+<img width="615" height="167" alt="image" src="https://github.com/user-attachments/assets/bebe7234-3406-42f3-b98b-5e26a1e36e21" />
+
+<img width="698" height="106" alt="image" src="https://github.com/user-attachments/assets/43f09d26-5e54-4790-bc54-942fc75d21df" />
+
+<img width="697" height="193" alt="image" src="https://github.com/user-attachments/assets/a3a7eabe-3fae-4923-8f55-54a82a1d857a" />
+
+##### 4、画板插槽组件等业务通用组件封装
+
+
+
+
+
+
+
+
