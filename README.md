@@ -54,7 +54,6 @@ heima293	12056258293	hm#qd@23!
 
 <img width="352" height="323" alt="image" src="https://github.com/user-attachments/assets/a0a42f90-e2a4-434f-b7df-6574ce65d731" />
 
-
 ##### 2、长页面吸顶交互的实现
 
 **使用原因：** 电商平台的页面大部分都很长，如果没有吸顶导航，用户将页面滑动到底部并且想要切换到其他页面时，只能再次将页面滑动到顶部，这种设计是很不友好的。有了吸顶导航后，用户可以随时点击吸顶导航进行页面切换。
@@ -63,13 +62,11 @@ heima293	12056258293	hm#qd@23!
 
 未超过设定的距离顶部的值时显示的头部页面是这样子的：
 
-<img width="1852" height="925" alt="image" src="https://github.com/user-attachments/assets/afd2be70-103b-49d5-9130-c2a1f8b0936a" />
-
+<img width="1557" height="138" alt="image" src="https://github.com/user-attachments/assets/bc87a26b-661a-4b6c-bdbf-33267e7a6424" />
 
 超过了之后显示是这样子的：
 
-<img width="1852" height="925" alt="image" src="https://github.com/user-attachments/assets/f1e30b7f-d63f-4144-af4f-1f973c1d0912" />
-
+<img width="1582" height="112" alt="image" src="https://github.com/user-attachments/assets/f39874db-307c-4b70-8b3c-1ad2329c4b7a" />
 
 **实现过程：**
 
@@ -77,18 +74,15 @@ heima293	12056258293	hm#qd@23!
 
 <img width="350" height="220" alt="image" src="https://github.com/user-attachments/assets/e03e8d55-13a0-4d53-8e68-335f06c01267" />
 
-
 LayoutFixed组件实现页面吸顶交互详情解释：
 
 首先需要vueuse中的useScroll函数来获取你在页面距离顶部的滚动距离y
 
-<img width="1212" height="164" alt="image" src="https://github.com/user-attachments/assets/a57e98b7-39ed-402b-a79a-b7f4d2eab634" />
-
+<img width="1103" height="147" alt="image" src="https://github.com/user-attachments/assets/5c7d49ec-ad62-406f-9a27-932cd08e645a" />
 
 当y>78px的时候，添加show类名show类名里面有个opacity的属性
 
 <img width="928" height="224" alt="image" src="https://github.com/user-attachments/assets/d71fc53d-7b47-4577-ae2b-e23e3bdbdc9a" />
-
 
 show类名里面有个opacity的属性，当这个属性变为1的时候，让这个组件显示出来
 
@@ -96,10 +90,8 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 
 <img width="1131" height="420" alt="image" src="https://github.com/user-attachments/assets/e3e39d2b-b821-4797-b8fb-8403f76069d9" />
 
-
 通过设置 “position: fixed;” 来实现，无论用户如何滚动页面，导航栏都一直显示在屏幕的特定位置。这样子就无论你往下滚动多少就一直显示在顶部
 
 <img width="1156" height="424" alt="image" src="https://github.com/user-attachments/assets/5c3e2d59-32bb-4b3d-a314-cc3f31af9c3f" />
-
 
 ##### 3、自定义图片懒加载指令并封装为插件
