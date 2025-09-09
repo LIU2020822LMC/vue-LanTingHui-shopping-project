@@ -153,7 +153,7 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 
 <img width="923" height="445" alt="image" src="https://github.com/user-attachments/assets/7de78b8a-f907-4e81-a1da-abdae0e618b0" />
 
-除了HomePanel组件时复用组件之外，还有一个GoodsItem组件也是复用组件，并且这个组件我将其全局注册（在main.ts文件进行全局导入），就是说，你在其他组件使用的时候直接<GoodsItem />就可以使用，不需要再import导入
+除了HomePanel组件时复用组件之外，还有一个GoodsItem组件也是复用组件，并且这个组件我将其全局注册（在main.ts文件进行全局注册），就是说，你在其他组件使用的时候直接<GoodsItem />就可以使用，不需要再import导入
 
 <img width="1196" height="614" alt="image" src="https://github.com/user-attachments/assets/6639da62-1266-4669-bba6-2e9186eabf5b" />
 
