@@ -129,12 +129,29 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 
 <img width="697" height="193" alt="image" src="https://github.com/user-attachments/assets/a3a7eabe-3fae-4923-8f55-54a82a1d857a" />
 
-##### 4、画板插槽组件等业务通用组件封装
+##### 4、封装复用组件
 
+**使用原因：** 在电商项目中，很多模块在结构上非常相似，只是内容不同，通过组件封装可以实现复用结构的效果。
 
+**基本思想：** 把可复用的结构只写一次，把可能发生变化的部分抽象成组件参数（props/插槽）
 
+比如说下面精选好货模块与人气推荐模块，他们机构都是相同的，只有数据是不一样的，所以只把相同的部分取出来，数据从父组件通过接口获取，然后再通过props传递给复用的组件，复用的组件再将他们渲染出来
 
+<img width="1566" height="654" alt="image" src="https://github.com/user-attachments/assets/5cc0a176-318f-4d1c-908b-46bcb713c2f6" />
 
+基于上面的思想就创造出HomePanel组件作为复用的组件
+
+<img width="1385" height="625" alt="image" src="https://github.com/user-attachments/assets/a988b9b9-ba46-4045-b477-a3d34e2f27a8" />
+
+下面是精选好货模块与人气推荐模块使用复用组件的方法
+
+<img width="877" height="338" alt="image" src="https://github.com/user-attachments/assets/7ef20a5d-861b-4f74-8289-2dd44c8fd7c9" />
+
+<img width="824" height="362" alt="image" src="https://github.com/user-attachments/assets/f919dae8-2e91-44ab-a2b7-e352a603d88d" />
+
+除了以上两个模块之外，还有一个HomeProduct组件也用到了这个复用组件
+
+<img width="923" height="445" alt="image" src="https://github.com/user-attachments/assets/7de78b8a-f907-4e81-a1da-abdae0e618b0" />
 
 
 
