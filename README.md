@@ -10,7 +10,7 @@
 git clone https://github.com/LIU2020822LMC/vue-LanTingHui-shopping-project.git
 ```
 
-##### 2.进入项目文件夹安装依赖
+##### 2.进入项目文件夹安装依赖（需要自行下载安装node.js）
 
 ```bash
 cd vue-LanTingHui-shopping-project
@@ -159,3 +159,28 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 
 <img width="805" height="109" alt="image" src="https://github.com/user-attachments/assets/94569b8d-9c59-406c-9ea2-9d5dc49f59c8" />
 
+以下是使用GoodsItem复用组件的例子
+
+在src\views\Category\index.vue组件使用：
+
+<img width="1606" height="205" alt="image" src="https://github.com/user-attachments/assets/ebb062e4-90f5-418d-adc8-88e565f1f943" />
+
+在src\views\Home\components\HomeProduct.vue组件使用：
+
+<img width="1218" height="319" alt="image" src="https://github.com/user-attachments/assets/adf63632-8a33-43ab-9b11-c0aea9349e32" />
+
+在src\views\Member\components\userInfo.vue组件使用：
+
+<img width="1341" height="377" alt="image" src="https://github.com/user-attachments/assets/5edf6519-77b7-4f8f-ba5f-efe7102ef86d" />
+
+在src\views\SubCategory\index.vue组件使用：
+
+<img width="1387" height="386" alt="image" src="https://github.com/user-attachments/assets/9dc5c319-1701-4247-8845-17562c33ff35" />
+
+##### 5、在package.json文件中的scripts的dev指令添加 --open
+
+本来是"dev": "vite"改成"dev": "vite --open"，添加的作用是当你启动项目的时候，即命令行运行pnpm run dev或者npm run dev的时候，一旦加载完成会立刻打开默认浏览器打开网站
+
+<img width="906" height="344" alt="image" src="https://github.com/user-attachments/assets/c9ead9c7-3c6e-4ada-8123-ee0efd337b03" />
+
+运行完毕之后不需要手动打开网址，直接自己打开
