@@ -2,8 +2,6 @@
 import HomePanel from './HomePanel.vue'
 import { getGoodsAPI, type GoodsItem } from '@/apis/home'
 import { ref, onMounted } from 'vue';
-import GoodsItems from './GoodsItem.vue';
-
 //获取数据列表
 const goodsProduct = ref < GoodsItem[] > ([])
 const getGoods = async () => {
@@ -28,7 +26,7 @@ onMounted(() => getGoods())
         </RouterLink>
         <ul class="goods-list">
           <li v-for="good in cate.goods" :key="good.id">
-            <GoodsItems :goods="good" />
+            <GoodsItem :goods="good" />
           </li>
         </ul>
       </div>

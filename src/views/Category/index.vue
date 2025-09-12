@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useCategory } from "@/views/Category/composables/useCategory";
-import GoodsItem from '../Home/components/GoodsItem.vue';
 import {useBanner} from '@/views/Category/composables/useBanner'
 
 //获取分类数据
@@ -55,7 +54,6 @@ const {BannerList} = useBanner()
     </div>
   </div>
 </template>
-
 
 <style scoped lang="scss">
 .top-category {

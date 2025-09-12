@@ -184,3 +184,15 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 <img width="906" height="344" alt="image" src="https://github.com/user-attachments/assets/c9ead9c7-3c6e-4ada-8123-ee0efd337b03" />
 
 运行完毕之后不需要手动打开网址，直接自己打开
+
+![20250912154840](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20250912154840.png)
+
+##### 6、通用逻辑函数的封装
+
+**封装原因：** 在项目中通常会有一些通用的函数，比如小兔鲜项目中的轮播图部分，将重复使用的代码块封装成独立的函数，这样在需要时可以直接调用这些函数，避免了重复编写相同的代码，提高了代码的复用性‌，同时降低模块之间的耦合度。
+
+**基本思想：** 将通用的逻辑函数拿出来封装到独立的js文件中，使用export将函数导出去，在函数内部使用return将需要用的数据或方法return出去
+
+比如在src\views\Category\composables\useBanner.ts文件封装的轮播图相关逻辑函数
+
+![20250912160901](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20250912160901.png)
