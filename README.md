@@ -249,3 +249,94 @@ show类名里面有个opacity的属性，当这个属性变为1的时候，让�
 
 ##### 8、路由缓存问题的处理
 
+**使用原因：** 使用带有参数的路由时，当用户从／users／johnny 导航到／users／jolyne（eg.从／users／1 导航到／users／2） 时，相同的组件实例将被重复使用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会被调用，数据不会更新。因为组件被重用，组件不会被销毁再创建，所以 setup/onMounted 不会再次运行，页面不会自动重新请求新 id 的数据。
+
+**实现方案：** 使用onBeforeRouteUpdate导航钩子，onBeforeRouteUpdate 是在路由参数变化、组件将被“更新路由”时触发的组件内导航守卫，适合在这里重新发起接口请求并更新组件状态，保证页面展示新参数对应的数据
+
+**实现的过程流程：** 当你首次访问/category/1005000时，Router创建组件实例，跳转到src\views\Category\index.vue组件 → setup/run onMounted → 调用getCategory(1005000) → 填充categoryData →视图渲染。
+
+![20251019154637](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019154637.png)
+
+后面当你访问/category/1005002时（同一组件、不同params），setup/run onMounted这一步骤不会再次执行，也就说不会重新发送新参数的请求，这个时候就要借助onBeforeRouteUpdate函数了，它会检测到你要去的路由跟之前有变化，然后你就可以实现当组件重新渲染之前执行自己设置的回调函数（“被其他函数调用” 的函数），即获取新路由的参数作为getCategory()函数的新参数执行发送新请求获取数据的操作，后面组件渲染出来之后，里面的响应式数据变化触发视图更新，显示/category/1005002的内容
+
+![20251019160753](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019160753.png)
+
+![20251019154807](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019154807.png)
+
+如果不使用onBeforeRouteUpdate（也不使用watch监听），组件不会被调用，页面仍显示旧的categoryData（/category/1005000的内容），用户看到的是“数据未更新”的情况
+
+###### 以上的总结都是根据[小兔鲜项目总结——项目亮点](https://blog.csdn.net/Kong08242022/article/details/143954066)这篇文章来写的
+
+###### 以下的总结是根据[vue3踩坑笔记：电商平台小兔鲜项目回顾与总结](https://www.jianshu.com/p/2d32339526dc)这篇文章来写
+
+### 小兔鲜项目中的亮点：
+
+#### 1、自定义vue指令v-lazy-img
+
+**背景：** 电商平台项目有大量的商品图与详情图, 同时大量加载与渲染图片资源会挤占带宽, 首页白屏与加载时间过长,体验不好, 所以需要使用到图片懒加载。封装成vue指令是为了在项目各文件中更便捷使用。
+**原理：** 图片懒加载，当滚动时元素出现在视口中时，才需要src替换成接口返回的图片地址。
+
+在根目录directives创建index.ts文件, 内容如下
+
+```ts
+//定义图片懒加载插件
+import { useIntersectionObserver } from "@vueuse/core";
+import type { App } from 'vue'
+import type { DirectiveBinding } from 'vue'
+
+export const ImgLazyPlugin = {
+  install(app: App){
+    //定义全局指令
+    app.directive("img-lazy", {
+      //“binding: DirectiveBinding<string>”
+      // 表示 binding 是一个指令绑定，这里的指令绑定类型是针对字符串类型的数据
+      mounted(el: HTMLImageElement, binding: DirectiveBinding) {
+        //el : 指令绑定的那个元素 
+        //binding：binding.value 指令等于号后面绑定的表达式的值 图片url
+        // console.log(el,binding.value)
+        // 使用 useIntersectionObserver 监听元素是否进入视口
+        const { stop } = useIntersectionObserver(
+          el, // 监听的元素
+          ([{ isIntersecting }]) => {
+            // console.log(isIntersecting)
+            // 当元素进入视口时 isIntersecting 为 true
+            if (isIntersecting) {
+              // 设置图片的 src 属性，开始加载图片
+              el.src = binding.value;
+              // 停止监听
+              stop();
+              // 图片加载完成后的处理
+              el.onload = () => {
+                // 可以在这里添加淡入效果或移除loading状态
+                el.style.opacity = "1";
+              };
+              // 图片加载失败的处理
+              el.onerror = () => {
+                // 设置默认图片或错误提示
+                el.src =
+                  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzVMMTI1IDEwMEwxMDAgMTI1TDc1IDEwMEwxMDAgNzVaIiBmaWxsPSIjQ0NDIi8+CjwvZz4KPC9zdmc+";
+              };
+            }
+          },
+          {
+            // 设置 rootMargin，提前80px开始加载图片
+            rootMargin: "80px",
+          }
+        );
+      },
+    });
+}
+}
+```
+
+![20251019200308](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019200308.png)
+
+![20251019200611](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019200611.png)
+
+main.js文件中引入并注册
+
+```ts
+//引入图片懒加载插件
+import {ImgLazyPlugin} from "@/directives/index"
+app.use(ImgLazyPlugin)
+```

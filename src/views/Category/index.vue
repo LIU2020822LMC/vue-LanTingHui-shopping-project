@@ -8,8 +8,6 @@ const {categoryData} = useCategory()
 //获取banner
 const {BannerList} = useBanner()
 
-
-
 </script>
 
 <template>
