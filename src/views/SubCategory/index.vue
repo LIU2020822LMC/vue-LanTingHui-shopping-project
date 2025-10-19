@@ -45,7 +45,8 @@ const load = async () =>{
   //获取下一页的数据
   dataList.value.page ++
   const res = await getSubCategoryAPI(dataList.value)
-  //goodsList.value = [...goodsList.value, ...res.result.items] ==>问题：试图把整个分页对象和商品数组拼接，就像把一本书和几张纸强行粘在一起，类型不匹配。
+  //goodsList.value = [...goodsList.value, ...res.result.items] ==>问题：
+  //试图把整个分页对象和商品数组拼接，就像把一本书和几张纸强行粘在一起，类型不匹配。
   //改正后的代码逐句解释：
   //goodsList.value = {...} 给整个商品列表重新赋值，就像换了一本新的笔记本，但保留了之前写过的内容
   goodsList.value = {
