@@ -40,7 +40,7 @@ heima291	12056258291	hm#qd@23!
 heima292	12056258292	hm#qd@23!
 heima293	12056258293	hm#qd@23!
 
-沙箱新账号 fukuvb7569@sandbox.com			
+沙箱新账号 scobys4865@sandbox.com		
 登录和支付的密码还是111111			
 ```
 
@@ -328,6 +328,34 @@ export const ImgLazyPlugin = {
 }
 }
 ```
+补充一个概念：视口边界（Viewport Boundary）。指的是浏览器当前可见区域的边缘（上下左右四个边）。简单说，就是你打开网页时，屏幕上能直接看到的那部分区域的边缘
+
+**实现过程：**
+
+![20251019202256](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019202256.png)
+
+**用文字 “画” 个示意图（假设纵向滚动）：**
+
+```plaintext
++------------------------+  ← 实际视口上边缘
+|                        |
+|     可见区域           |
+|                        |
++------------------------+  ← 实际视口下边缘
+|                        |
+|  （rootMargin扩展的80px范围） ← 这里就是“预警带”
+|                        |
++------------------------+  ← 扩展范围的下边缘（实际视口下边缘+80px）
+|                        |
+|  [图片元素]            |  ← 初始位置（在扩展范围外，不加载）
+|                        |
+↓ 滚动方向
+...
+|                        |
+|  [图片元素]            |  ← 进入扩展范围（距离实际视口下边缘80px内），触发加载
+|                        |
++------------------------+  ← 扩展范围的下边缘
+```
 
 ![20251019200308](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251019200308.png)
 
@@ -340,3 +368,607 @@ main.js文件中引入并注册
 import {ImgLazyPlugin} from "@/directives/index"
 app.use(ImgLazyPlugin)
 ```
+#### 2、axios的二次封装
+
+在src\utils\http.ts下面写入如下内容：
+
+```ts
+//axios基础的封装
+import axios from "axios";
+import { ElMessage } from "element-plus";
+import { useUserStore } from "@/stores/userStore";
+import router from "@/router";
+
+const request = axios.create({
+  baseURL: "http://pcapi-xiaotuxian-front-devtest.itheima.net",
+  timeout: 50000,
+});
+
+//axios请求拦截器
+request.interceptors.request.use(
+  (config) => {
+    //函数（config => { return config }）：请求成功准备发送时会执行。
+    //config 是请求的 “配置信息”（比如请求地址、请求头、参数等）。
+    //这里 return config 表示 “让请求按原计划发送”（不做修改）。
+    //实际开发中，这里经常用来加东西，比如给所有请求加个身份令牌（token）：config.headers.Authorization = 'xxx'，再 return 出去。
+
+    //给所有请求加个身份令牌（token）
+    //1.从pinia获取token数据
+    const userStore = useUserStore();
+    const token = userStore.userInfo?.token;
+    //2.按照后端的要求拼接token数据
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (e) => Promise.reject(e)
+);
+
+//axios响应式拦截器
+request.interceptors.response.use(
+  //返回res.data是为了只提取响应体数据，让调用方直接拿到业务数据，而不需要每次都response.data
+  //实际流程：
+  // 1.服务器返回的是已经是JSON格式的数据
+  // 2.Axios会自动将JSON响应解析成JavaScript对象
+  // 3.拦截器只是帮你把response.data提取出来，省去了每次都要.data的步骤
+  // 举个例子：
+  //没有拦截器时
+  // const response = await request.get('/api/goods')
+  // const data = response.data  // 需要手动.data
+
+  // 有拦截器时
+  // const data = await request.get('/api/goods')  // 直接拿到数据
+  (res) => res.data,
+  //统一错误提示
+  (e) => {
+    ElMessage({
+      showClose: true,
+      message: e.response.data.message,
+      type: "error",
+    });
+    //401token失效处理
+    if (e.response.status === 401) {
+      //1.清除本地用户数据
+      const userStore = useUserStore();
+      userStore.clearUserInfo();
+      //2.跳转到登录页
+      router.push("/login");
+    }
+    return Promise.reject(e);
+  }
+);
+
+export default request;
+```
+#### 3、持久化本地pinia数据
+
+1、用户数据中有一个关键的数据叫做Token（用来标识当前用户是否登录），而Token持续一段时间才会过期
+2、Pinia的存储是基于内存的，刷新就丢失，为了保持登录状态就要做到刷新不丢失，需要配合持久化进行存储
+3、有两种方式，本地存储localStorage，以及pinia的插件pinia-plugin-persistedstate
+
+本项目使用pinia的插件pinia-plugin-persistedstate来持久化存储数据
+
+![20251021104930](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021104930.png)
+
+当你在Store里面写入  {persist: true,}之后，pinia-plugin-persistedstate插件就会自动帮你将这个store存储的state进行持久化存储，比如说在src\stores\userStore.ts中，它就会帮你把cartStore与userInfo进行持久化存储，即在浏览器的本地存储空间里当作键值对来存储，键是你定义的这个store的名字，值就是这个store的state数据
+
+![20251021105447](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021105447.png)
+
+![20251021105619](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021105619.png)
+
+![20251021105818](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021105818.png)
+
+![20251021110047](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021110047.png)
+
+
+#### 4、路由缓存问题，即路由跳转时，页面没有更新
+
+什么是路由缓存问题：使用带有参数的路由时需要注意的是，当用户从／users／johnny 导航到／users／jolyne 时，相同的组件实例将被重复使用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会被调用。
+
+本项目采用onBeforeRouteUpdate函数来解决这个问题，即再次更新路由复用组件onMounted生命周期函数不再生效时，onBeforeRouteUpdate函数就会执行里面回调函数，即更新路由发送新的请求获取新数据渲染页面
+
+![20251021110615](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021110615.png)
+
+#### 5、支付流程
+
+![20251021111124](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021111124.png)
+
+在src\views\Pay\index.vue组件写入如下内容（选择要何种方式支付的页面）：
+
+```js
+<script setup lang="ts">
+import { getOrderAPI, type getOrderResult } from "@/apis/pay"
+import { onMounted, ref } from "vue";
+import {useRoute } from "vue-router";
+import { useCountDown } from "@/components/useCountDown";
+
+
+const payInfo = ref < getOrderResult | null>(null)
+const { start, formatTime } = useCountDown()
+const route = useRoute()
+const getOrder =   async() =>{
+  const res = await getOrderAPI(route.query.id as string)
+  payInfo.value = res.result
+  start(res.result.countdown)
+}
+
+onMounted(()=>{
+  getOrder()
+})
+
+// 跳转支付地址
+//携带订单id以及回调地址跳转到支付地址（get）
+const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const backURL = 'http://127.0.0.1:5173/paycallback'
+const redirectUrl = encodeURIComponent(backURL)
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
+</script>
+
+
+<template>
+<div class="xtx-pay-page">
+<div class="container">
+<!-- 付款信息 -->
+<div class="pay-info">
+<span class="icon iconfont icon-queren2"></span>
+<div class="tip">
+<p>订单提交成功！请尽快完成支付。</p>
+<p>支付还剩 <span>{{ formatTime }}</span>, 超时后将取消订单</p>
+</div>
+<div class="amount">
+<span>应付总额：</span>
+<span>¥{{ payInfo?.payMoney?.toFixed(2) }}</span>
+</div>
+</div>
+<!-- 付款方式 -->
+<div class="pay-type">
+<p class="head">选择以下支付方式付款</p>
+<div class="item">
+<p>支付平台</p>
+<a class="btn wx" href="javascript:;"></a>
+<a class="btn alipay" :href="payUrl"></a>
+</div>
+<div class="item">
+<p>支付方式</p>
+<a class="btn" href="javascript:;">招商银行</a>
+<a class="btn" href="javascript:;">工商银行</a>
+<a class="btn" href="javascript:;">建设银行</a>
+<a class="btn" href="javascript:;">农业银行</a>
+<a class="btn" href="javascript:;">交通银行</a>
+</div>
+</div>
+</div>
+</div>
+</template>
+
+<style scoped lang="scss">
+.xtx-pay-page {
+margin-top: 20px;
+}
+
+.pay-info {
+
+background: #fff;
+display: flex;
+align-items: center;
+height: 240px;
+padding: 0 80px;
+
+.icon {
+font-size: 80px;
+color: #1dc779;
+}
+
+.tip {
+padding-left: 10px;
+flex: 1;
+
+p {
+&:first-child {
+font-size: 20px;
+margin-bottom: 5px;
+}
+
+&:last-child {
+color: #999;
+font-size: 16px;
+}
+}
+}
+
+.amount {
+span {
+&:first-child {
+font-size: 16px;
+color: #999;
+}
+
+&:last-child {
+color: $priceColor;
+font-size: 20px;
+}
+}
+}
+}
+
+.pay-type {
+margin-top: 20px;
+background-color: #fff;
+padding-bottom: 70px;
+
+p {
+line-height: 70px;
+height: 70px;
+padding-left: 30px;
+font-size: 16px;
+
+&.head {
+border-bottom: 1px solid #f5f5f5;
+}
+}
+
+.btn {
+width: 150px;
+height: 50px;
+border: 1px solid #e4e4e4;
+text-align: center;
+line-height: 48px;
+margin-left: 30px;
+color: #666666;
+display: inline-block;
+
+&.active,
+&:hover {
+border-color: $LTHColor;
+}
+
+&.alipay {
+background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/7b6b02396368c9314528c0bbd85a2e06.png) no-repeat center /
+contain;
+}
+
+&.wx {
+background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg) no-repeat center /
+contain;
+}
+}
+}</style>
+```
+
+支付成功后返回的页面写在src\views\Pay\PayBack.vue组件上，内容如下：
+
+```js
+<script setup lang="ts">
+import { getOrderAPI, type getOrderResult } from "@/apis/pay"
+import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+
+
+const payInfo = ref<getOrderResult | null>(null)
+
+const route = useRoute()
+const getOrder = async () =>{
+  const res = await getOrderAPI(route.query.id as string)
+  payInfo.value = res.result
+
+}
+
+onMounted(()=>{
+  getOrder()
+})
+</script>
+
+
+<template>
+  <div class="xtx-pay-page">
+    <div class="container">
+      <!-- 支付结果 -->
+      <div class="pay-result">
+        <!-- 路由参数是字符串而不是布尔值 -->
+        <span class="iconfont icon-duihao2 green" v-if="$route.query.payResult === 'true'"></span>
+        <span class="iconfont icon-chahao red" v-else></span>
+        <p class="tit">支付{{ $route.query.payResult === 'true' ? '成功' : '失败' }}</p>
+        <p class="tip">我们将尽快为您发货，收货期间请保持手机畅通</p>
+        <p>支付方式：<span>支付宝</span></p>
+        <p>支付金额：<span>¥{{ payInfo?.payMoney }}</span></p>
+        <div class="btn">
+          <el-button type="primary" style="margin-right:20px" @click="$router.push('/cartList')">查看订单</el-button>
+          <el-button @click="$router.push('/')">进入首页</el-button>
+        </div>
+        <p class="alert">
+          <span class="iconfont icon-tip"></span>
+          温馨提示：小兔鲜儿不会以订单异常、系统升级为由要求您点击任何网址链接进行退款操作，保护资产、谨慎操作。
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.pay-result {
+  padding: 100px 0;
+  background: #fff;
+  text-align: center;
+  margin-top: 20px;
+
+  >.iconfont {
+    font-size: 100px;
+  }
+
+  .green {
+    color: #1dc779;
+  }
+
+  .red {
+    color: $priceColor;
+  }
+
+  .tit {
+    font-size: 24px;
+  }
+
+  .tip {
+    color: #999;
+  }
+
+  p {
+    line-height: 40px;
+    font-size: 16px;
+  }
+
+  .btn {
+    margin-top: 50px;
+  }
+
+  .alert {
+    font-size: 12px;
+    color: #999;
+    margin-top: 50px;
+  }
+}
+</style>
+```
+
+#### 6、定制路由滚动行为
+
+当切换路由时，页面自动滚动到顶部，在router文件中进行配置
+
+![20251021111445](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021111445.png)
+
+#### 7、手动实现导航组件的吸顶展示功能
+
+**需求背景：**当首页页面过长时，使用吸顶效果，使得用户在滑动读取数据的时候把导航条一直固定在屏幕上方，以便用户快速操作和交互。
+**逻辑实现：**vueuse中的获取滚动距离顶部的y轴参数，当滚动距离大于78（页面header部分的高度）时，添加show类名，实现吸顶效果
+
+![20251021111758](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251021111758.png)
+
+**关键样式：**
+
+```css
+.app-header-sticky {
+  width: 100%;
+  height: 100px;
+  //通过设置 “position: fixed;” 来实现，无论用户如何滚动页面，导航栏都一直显示在屏幕的特定位置。
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  background-color: #fff;
+  border-bottom: 1px solid #e4e4e4;
+  // 此处为关键样式!!!
+  // 状态一：往上平移自身高度 + 完全透明
+  //translateY 是控制元素在垂直方向移动的属性。
+  //-100% 表示 “向上移动自身高度的 100%”（比如元素高 80px，就向上移 80px）。
+  transform: translateY(-100%);
+  //控制元素的透明度，0 表示完全透明（即使元素在屏幕里，也看不见）
+  opacity: 0;
+
+  // 状态二：移除平移 + 完全不透明
+  &.show {
+    transition: all 0.4s linear;
+    /* 动画过渡：所有变化在0.4秒内完成 */
+    transform: none;
+    /* 取消移动（回到原来的位置） */
+    opacity: 1;
+    /* 完全不透明（可见） */
+  }
+}
+```
+#### 8、商详页，图片预览组件的小图切换大图与放大镜效果
+
+在src\components\ImageView\index.vue组件写入如下代码：
+
+```js
+<script setup lang="ts">
+import { useMouseInElement } from '@vueuse/core'
+import { ref, watch } from 'vue'
+
+// props适配图片列表
+defineProps({
+  imageList: {
+    // 为 imageList prop 添加了明确的类型定义，要声明这个数组是什么类型的
+    type: Array as () => string[],
+    default: () => []
+  }
+})
+
+
+//1.小图切换成大图显示
+const activeIndex = ref(0)
+
+const enterHandler = (i: number) => {
+  activeIndex.value = i
+}
+
+//2.获取鼠标相对位置
+const target = ref(null)
+const { elementX, elementY, isOutside } = useMouseInElement(target)
+
+//3.控制滑块跟随鼠标移动（监听elementX/Y变化，一旦变化 重新设置left/top）
+const left = ref(0)
+const top = ref(0)
+
+const positionX = ref(0)
+const positionY = ref(0)
+watch([elementX, elementY,isOutside], () => {
+  //以下的逻辑实现有点复杂，需要时间思考思考
+  // console.log('xy变化了');
+  if(isOutside.value) return
+  // console.log('后续逻辑执行了');
+  //有效范围内控制滑块距离
+  //横向
+  // 鼠标在100-300之间，滑块就跟着鼠标走
+  if (elementX.value > 100 && elementX.value < 300) {
+    // 让滑块中心对准鼠标，left.value=滑块横向移动的距离
+    left.value = elementX.value - 100
+  }
+  //纵向
+  if (elementY.value > 100 && elementY.value < 300) {
+    top.value = elementY.value - 100
+  }
+  //处理边界
+  if (elementX.value > 300) { left.value = 200 }
+  if (elementX.value < 100) { left.value = 0 }
+
+  if (elementY.value > 300) { top.value = 200 }
+  if (elementY.value < 100) { top.value = 0 }
+
+  //控制大图显示
+  //大图移动的方向和滑块相反，而且移动距离是2倍
+  positionX.value = -left.value * 2
+  positionY.value = -top.value * 2
+})
+</script>
+
+
+<template>
+  <!-- {{ elementX }},{{ elementY }},{{ isOutside }} -->
+  <div class="goods-image">
+    <!-- 左侧大图-->
+    <div class="middle" ref="target">
+      <img :src="imageList[activeIndex]" alt="" />
+      <!-- 蒙层小滑块 -->
+      <div class="layer" v-show="!isOutside" :style="{ left: `${left}px`, top: `${top}px` }"></div>
+    </div>
+    <!-- 小图列表 -->
+    <ul class="small">
+      <!-- 当鼠标指针进入（移动到）绑定该指令的 HTML 元素时，会触发名为enterHandler的函数 -->
+      <!-- :class="{active:i === activeIndex}"==>当鼠标移动到哪个图，哪个图就使用这个类名 -->
+      <li v-for="(img, i) in imageList" :key="i" @mouseenter="enterHandler(i)" :class="{ active: i === activeIndex }">
+        <img :src="img" alt="图片资源请求失败" />
+      </li>
+    </ul>
+    <!-- 放大镜大图 -->
+    <div class="large" :style="[
+      {
+        backgroundImage: `url(${imageList[activeIndex]})`,
+        backgroundPositionX: `${positionX}px`,
+        backgroundPositionY: `${positionY}px`,
+      },
+    ]" v-show="!isOutside"></div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.goods-image {
+  width: 480px;
+  height: 400px;
+  position: relative;
+  display: flex;
+
+  .middle {
+    width: 400px;
+    height: 400px;
+    background: #f5f5f5;
+  }
+
+  .large {
+    position: absolute;
+    top: 0;
+    left: 412px;
+    width: 400px;
+    height: 400px;
+    z-index: 500;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-repeat: no-repeat;
+    // 背景图:盒子的大小 = 2:1 将来控制背景图的移动来实现放大的效果查看 background-position
+    background-size: 800px 800px;
+    background-color: #f8f8f8;
+  }
+
+  .layer {
+    width: 200px;
+    height: 200px;
+    background: rgba(0, 0, 0, 0.2);
+    // 绝对定位 然后跟随咱们鼠标控制left和top属性就可以让滑块移动起来
+    left: 0;
+    top: 0;
+    position: absolute;
+  }
+
+  .small {
+    width: 80px;
+
+    li {
+      width: 68px;
+      height: 68px;
+      margin-left: 12px;
+      margin-bottom: 15px;
+      cursor: pointer;
+
+      &:hover,
+      &.active {
+        border: 2px solid $LTHColor;
+      }
+    }
+  }
+}
+</style>
+```
+**实现流程：**
+
+##### 1、小图切换大图的实现
+
+（1）数据层面
+
+- 定义了 activeIndex（响应式变量），用于记录「当前被选中的小图索引」，默认值为 0（默认显示第一张图）。
+- 接收父组件传入的 imageList 数组（存储所有图片的地址），小图和大图都从这个数组中取图。
+
+![20251022130635](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251022130635.png)
+
+（2）交互层面
+
+- 小图列表通过 v-for 循环 imageList 渲染，每个小图的```<li>```绑定了 @mouseenter="enterHandler(i)" 事件：当鼠标移入某个小图时，会触发 enterHandler 函数，并传入当前小图的索引 i。
+
+- enterHandler 函数的逻辑很简单：把 activeIndex 的值更新为当前小图的索引 i（即 activeIndex.value = i）
+
+![20251023112846](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023112846.png)
+
+![20251023113119](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023113119.png)
+
+(3) 视图层面
+
+- 左侧大图的 ```<img>``` 标签通过 :src="imageList[activeIndex]" 动态绑定图片地址：当 activeIndex 变化时，大图的 src 会自动切换为 imageList 中对应索引的图片，实现「小图切换大图」的效果。
+
+- 小图的 ```<li>``` 还通过 :class="{ active: i === activeIndex }" 绑定了高亮样式：当某个小图的索引 i 和 activeIndex 相等时，会添加 active 类（比如边框高亮），提示用户当前选中的是哪张图。
+
+![20251023114055](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023114055.png)
+
+![20251023114620](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023114620.png)
+
+![20251023114508](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023114508.png)
+
+小图转成大图是因为包容图片的容器标签样式改变了
+
+![20251023115032](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023115032.png)
+
+![20251023115238](https://raw.githubusercontent.com/LIU2020822LMC/BlogImage/main/img/20251023115238.png)
+
+##### 2、放大镜效果的实现
+
+**核心思路：** 通过「跟踪鼠标在原图上的位置」，控制「滑块位置」和「放大区域的显示内容」，模拟放大镜效果。
+
+
+
+#### 9、在路由页面，使用导航守卫，配置路由跳转前后的行为

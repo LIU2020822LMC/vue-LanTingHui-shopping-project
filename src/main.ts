@@ -1,5 +1,3 @@
-// import './assets/main.css'
-
 //引入初始化样式文件
 import "@/styles/common.scss";
 //引入图片懒加载插件
